@@ -1,24 +1,21 @@
-import React from 'react';
-import { Card } from 'react-bootstrap';
-import { IProduct } from '../products';
-import Rating from '../components/Rating';
+import React from 'react'
+import { Link } from 'react-router-dom'
+import { Card } from 'react-bootstrap'
+import { IProduct } from '../types'
+import Rating from '../components/Rating'
 
 interface Props {
-	product: IProduct;
+	product: IProduct
 }
 
 const Product = ({ product }: Props) => {
 	return (
 		<Card className="my-3 p-3">
-			<a href={`/product/${product._id}`}>
-				<Card.Img src={product.image} variant="top" />
-			</a>
+			<Card.Img src={product.image} variant="top" />
 			<Card.Body>
-				<a href={`/product/${product._id}`}>
-					<Card.Title as="div">
-						<strong>{product.name}</strong>
-					</Card.Title>
-				</a>
+				<Card.Title as="div">
+					<strong>{product.name}</strong>
+				</Card.Title>
 
 				<Card.Text as="div">
 					<Rating
@@ -28,9 +25,10 @@ const Product = ({ product }: Props) => {
 				</Card.Text>
 
 				<Card.Text as="h3">${product.price}</Card.Text>
+				<Link to={`/product/${product._id}`} className="stretched-link"></Link>
 			</Card.Body>
 		</Card>
-	);
-};
+	)
+}
 
-export default Product;
+export default Product

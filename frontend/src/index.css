@@ -23,3 +23,12 @@ main {
 .rating span {
 	margin: 0.1rem;
 }
+
+.card {
+	transition: 0.5s 0.15s;
+}
+
+.card:hover {
+	transform: scale(1.025);
+	box-shadow: -2px 9px 25px 0px rgba(30, 30, 60, 0.25);
+}
