@@ -1,204 +1,209 @@
-import React, { useEffect, useState } from 'react'
 import {
 	Button,
-	Card,
-	Col,
-	FormControl,
+	Center,
+	chakra,
+	Grid,
+	HStack,
+	IconButton,
 	Image,
-	InputGroup,
-	ListGroup,
-	ListGroupItem,
-	Row,
-	Toast,
-} from 'react-bootstrap'
+	Input,
+	Skeleton,
+	Stack,
+	StackDivider,
+	Text,
+	useToast,
+} from '@chakra-ui/react'
+import { faCartPlus, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, RouteComponentProps } from 'react-router-dom'
-import Loader from '../components/Loader'
+import { RouteComponentProps } from 'react-router-dom'
 import Message from '../components/Message'
+import PageHeader from '../components/PageHeader'
 import Rating from '../components/Rating'
-import { addToCart, itemCanBeAddedToCart } from '../reducers/cartReducer'
+import {
+	addToCart,
+	getCartItemQuantity,
+	itemCanBeAddedToCart,
+} from '../reducers/cartReducer'
 import {
 	fetchProductById,
 	getProductDetailsState,
 } from '../reducers/productDetailsReducer'
-
 interface Params {
 	id: string
 }
 
-interface Props extends RouteComponentProps<Params> {}
-
-const ProductPage = ({ match, location }: Props) => {
+const ProductPage = ({ match, location }: RouteComponentProps<Params>) => {
 	const dispatch = useDispatch()
 	const { product, status, error } = useSelector(getProductDetailsState)
-	const canBeAddedToCart = useSelector(itemCanBeAddedToCart)(product?._id)
-	const [quantity, setQuantity] = useState(1)
-	const [show, setShow] = useState(false)
+	const [quantity, setQuantity] = useState(0)
 	const itemId = product?._id
+	const quantityInCart = useSelector(getCartItemQuantity)(itemId)
+	const canBeAddedToCartStore = useSelector(itemCanBeAddedToCart)(itemId)
+	const availableQuantity = (product?.countInStock || 0) - quantityInCart
+	const toast = useToast()
 
 	useEffect(() => {
 		dispatch(fetchProductById(match.params.id))
 	}, [dispatch, match])
 
 	useEffect(() => {
-		const quantityQuerry = Number(location.search.split('=')[1]) || 1
-		setQuantity(quantityQuerry)
-	}, [dispatch, location.search])
+		const quantityQuerry = Number(location.search.split('=')[1])
+		if (quantityQuerry <= availableQuantity) setQuantity(quantityQuerry)
+		else setQuantity(availableQuantity)
+	}, [availableQuantity, canBeAddedToCartStore, dispatch, location.search])
 
 	const addToCartHandler = () => {
 		if (itemId) {
 			dispatch(addToCart({ itemId, quantity }))
-			setShow(true)
+			toast({
+				title: 'Item added to cart.',
+				description: `Added ${quantity} item(s)`,
+				status: 'success',
+				duration: 4000,
+				isClosable: true,
+			})
 		}
 	}
 
 	return (
 		<>
-			<Link className="btn btn-light my-3" to="/">
-				Go Back
-			</Link>
+			<PageHeader>Product page</PageHeader>
 
-			{status === 'loading' ? (
-				<Loader />
-			) : status === 'error' ? (
-				<Message variant="danger">Error: {error?.message}</Message>
-			) : typeof product !== 'undefined' ? (
-				<Row>
-					<Col md={6}>
-						<Image src={product.image} alt={product.name} fluid></Image>
-					</Col>
-					<Col md={3}>
-						<ListGroup variant="flush">
-							<ListGroupItem>
-								<h3>{product.name}</h3>
-							</ListGroupItem>
-							<ListGroupItem>
-								<Rating
-									value={product.rating}
-									text={`${product.numReviews} reviews`}
-								/>
-							</ListGroupItem>
-							<ListGroupItem>Price: ${product.price}</ListGroupItem>
-							<ListGroupItem>Description: {product.description}</ListGroupItem>
-						</ListGroup>
-					</Col>
-					<Col md={3}>
-						<Card>
-							<ListGroup variant="flush">
-								<ListGroupItem>
-									<Row>
-										<Col>Price: </Col>
-										<Col>
-											<strong>${product.price}</strong>
-										</Col>
-									</Row>
-								</ListGroupItem>
-
-								<ListGroupItem>
-									<Row>
-										<Col>Status: </Col>
-										<Col>
-											<strong>
-												{product.countInStock > 0 ? 'In Stock' : 'Out Of Stock'}
-											</strong>
-										</Col>
-									</Row>
-								</ListGroupItem>
-
-								{product.countInStock > 0 && (
-									<ListGroupItem>
-										<Row>
-											<Col md={5}>Quantity: </Col>
-											<Col md={7}>
-												<InputGroup hasValidation>
-													<InputGroup.Prepend>
-														<Button
-															className="mr-1"
-															variant="secondary"
-															size="sm"
-															onClick={() => setQuantity((prev) => prev - 1)}
-															disabled={quantity <= 0}
-														>
-															<i className="fas fa-minus"></i>
-														</Button>
-													</InputGroup.Prepend>
-													<FormControl
-														onChange={(e) =>
-															setQuantity(
-																Number.parseInt(e.target.value || '0')
-															)
-														}
-														className="text-center"
-														value={quantity}
-														isInvalid={
-															(quantity > product.countInStock ||
-																!canBeAddedToCart) &&
-															quantity !== 0
-														}
-													></FormControl>
-													<InputGroup.Append>
-														<Button
-															className="ml-1"
-															variant="secondary"
-															size="sm"
-															onClick={() => setQuantity((prev) => prev + 1)}
-															disabled={
-																!canBeAddedToCart ||
-																quantity >= product.countInStock
-															}
-														>
-															<i className="fas fa-plus"></i>
-														</Button>
-													</InputGroup.Append>
-													<FormControl.Feedback type="invalid">
-														We don't have so many items ;(
-													</FormControl.Feedback>
-												</InputGroup>
-											</Col>
-										</Row>
-									</ListGroupItem>
-								)}
-
-								<ListGroupItem>
-									<Button
-										onClick={addToCartHandler}
-										className="btn-block"
-										type="button"
-										disabled={product.countInStock === 0 || quantity === 0}
-									>
-										Add To Cart
-									</Button>
-								</ListGroupItem>
-							</ListGroup>
-						</Card>{' '}
-						<Toast
-							onClose={() => setShow(false)}
-							show={show}
-							delay={4000}
-							style={{
-								position: 'fixed',
-								bottom: 10,
-								right: 10,
-							}}
-							autohide
-						>
-							<Toast.Header>
-								<i
-									style={{ color: '#4caf50' }}
-									className="fas fa-cart-plus rounded mr-2"
-								></i>
-								<strong className="mr-auto">Cart</strong>
-							</Toast.Header>
-							<Toast.Body>Item added to cart!</Toast.Body>
-						</Toast>
-					</Col>
-				</Row>
+			{status === 'error' ? (
+				<Message status="error">Error: {error?.message}</Message>
 			) : (
-				<Row>
-					<Col>
-						<h1>Product not found :(</h1>
-					</Col>
-				</Row>
+				<Center>
+					<Grid
+						templateColumns={{ lg: '6fr 3fr 4fr' }}
+						gap={{ sm: '40px', md: '50px' }}
+						maxW="1400px"
+						mt="3"
+					>
+						<Skeleton isLoaded={status === 'finished'}>
+							<Stack isTruncated dir="column" spacing="3">
+								<chakra.h1 fontSize="3xl" whiteSpace="initial">
+									{product?.name}
+								</chakra.h1>
+								<Image
+									src={product?.image}
+									alt={product?.name}
+									fit="cover"
+									align="center"
+								></Image>
+							</Stack>
+						</Skeleton>
+						<Skeleton isLoaded={status === 'finished'}>
+							<Stack
+								dir="column"
+								spacing="4"
+								divider={<StackDivider borderColor="gray.300" />}
+								justify={{ sm: 'center', md: 'start' }}
+							>
+								<Rating
+									value={product?.rating || 0}
+									text={`${product?.numReviews} reviews`}
+									fontSize="2xl"
+									iconSize={6}
+								/>
+								<chakra.h2 fontSize="xl">Price: ${product?.price}</chakra.h2>
+
+								<chakra.p fontSize="md">{product?.description}</chakra.p>
+							</Stack>
+						</Skeleton>
+						<Skeleton isLoaded={status === 'finished'}>
+							<Stack
+								dir="column"
+								spacing="10"
+								justify="center"
+								p={6}
+								bg="white"
+								maxH={{ md: '400px' }}
+								borderWidth="1px"
+								rounded="lg"
+								shadow="lg"
+							>
+								<Text as="h2" fontSize="xl">
+									Status:{' '}
+									<chakra.strong
+										color={
+											(product?.countInStock || 0) > 0 ? 'green.600' : 'red.600'
+										}
+									>
+										{(product?.countInStock || 0) > 0
+											? 'In Stock'
+											: 'Out Of Stock'}
+									</chakra.strong>
+								</Text>
+								<Text as="h2" fontSize="xl">
+									Total price:{' '}
+									<chakra.strong>
+										${((product?.price || 0) * quantity).toFixed(2)}
+									</chakra.strong>
+								</Text>
+								<HStack maxW="200px" alignSelf="center" justifySelf="center">
+									<IconButton
+										aria-label="Decrement quantity"
+										size="sm"
+										onClick={() =>
+											quantity > availableQuantity
+												? setQuantity(availableQuantity)
+												: setQuantity((prev) => prev - 1)
+										}
+										disabled={quantity <= 0}
+										icon={<FontAwesomeIcon icon={faMinus} />}
+									></IconButton>
+									<Input
+										pr="4.5rem"
+										type="text"
+										value={quantity}
+										variant="filled"
+										onChange={(e) => {
+											const parsedQty = Number.parseInt(e.target.value)
+											if (parsedQty) {
+												if (parsedQty > availableQuantity)
+													return setQuantity(availableQuantity)
+												else if (parsedQty >= 0) return setQuantity(parsedQty)
+											}
+											return setQuantity(0)
+										}}
+										isInvalid={
+											(quantity > availableQuantity ||
+												!canBeAddedToCartStore) &&
+											quantity !== 0
+										}
+									/>
+									<IconButton
+										aria-label="Increment quantity"
+										size="sm"
+										onClick={() =>
+											quantity < 0
+												? setQuantity(0)
+												: setQuantity((prev) => prev + 1)
+										}
+										disabled={
+											!canBeAddedToCartStore || quantity >= availableQuantity
+										}
+										icon={<FontAwesomeIcon icon={faPlus} />}
+									></IconButton>
+								</HStack>
+								<Button
+									leftIcon={<FontAwesomeIcon icon={faCartPlus} />}
+									onClick={addToCartHandler}
+									disabled={
+										!canBeAddedToCartStore ||
+										quantity > availableQuantity ||
+										quantity <= 0
+									}
+									colorScheme="green"
+								>
+									Add to cart
+								</Button>
+							</Stack>
+						</Skeleton>
+					</Grid>
+				</Center>
 			)}
 		</>
 	)

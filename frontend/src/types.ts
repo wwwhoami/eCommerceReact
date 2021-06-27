@@ -36,7 +36,7 @@ export type ProductDetailsState = {
 
 export type CartState = {
 	status?: 'loading' | 'finished' | 'error'
-	cart: CartItem[]
+	items: CartItem[]
 	error: SerializedError
 }
 

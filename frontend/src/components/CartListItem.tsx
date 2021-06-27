@@ -1,20 +1,23 @@
-import React, { useEffect, useState } from 'react'
 import {
-	Button,
-	Col,
-	FormControl,
+	HStack,
+	IconButton,
 	Image,
-	InputGroup,
-	ListGroupItem,
-	Row,
-} from 'react-bootstrap'
+	Input,
+	LinkBox,
+	Stack,
+	Text,
+	VStack,
+} from '@chakra-ui/react'
+import { faMinus, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
 import {
 	itemCanBeAddedToCart,
 	removeCartItem,
 	setCartItemQuantity,
 } from '../reducers/cartReducer'
+import { Link as ReactRouterLink } from 'react-router-dom'
 import { CartItem } from '../types'
 
 interface Props {
@@ -31,71 +34,96 @@ const CartListItem = ({ item }: Props) => {
 	}
 
 	useEffect(() => {
-		if (canBeAddedToCart)
-			dispatch(setCartItemQuantity({ _id: item._id, quantity }))
+		dispatch(setCartItemQuantity({ _id: item._id, quantity }))
 	}, [quantity, dispatch, item._id, canBeAddedToCart])
 
 	return (
-		<ListGroupItem key={item._id}>
-			<Row>
-				<Col md={2}>
-					<Image src={item.image} alt={item.name} fluid rounded></Image>
-				</Col>
-				<Col md={3}>
-					<Link to={`/product/${item._id}`}>{item.name}</Link>
-				</Col>
-				<Col md={2}>${item.price}</Col>
-				<Col md={2}>
-					<InputGroup hasValidation>
-						<InputGroup.Prepend>
-							<Button
-								className="mr-1"
-								variant="secondary"
-								size="sm"
-								onClick={() => setQuantity((prev) => prev - 1)}
-								disabled={quantity <= 0}
-							>
-								<i className="fas fa-minus"></i>
-							</Button>
-						</InputGroup.Prepend>
-						<FormControl
-							onChange={(e) =>
-								setQuantity(Number.parseInt(e.target.value || '0'))
-							}
-							className="text-center"
-							value={quantity}
-							isInvalid={
-								(quantity > item.countInStock || !canBeAddedToCart) &&
-								quantity !== 0
-							}
-						></FormControl>
-						<InputGroup.Append>
-							<Button
-								className="ml-1"
-								variant="secondary"
-								size="sm"
-								onClick={() => setQuantity((prev) => prev + 1)}
-								disabled={!canBeAddedToCart || quantity >= item.countInStock}
-							>
-								<i className="fas fa-plus"></i>
-							</Button>
-						</InputGroup.Append>
-						<FormControl.Feedback type="invalid">
-							We don't have so many items ;(
-						</FormControl.Feedback>
-					</InputGroup>
-				</Col>
-				<Col md={2}>
-					<Button
-						type="button"
-						variant="outline-danger"
-						onClick={() => removeFromCartHandler(item._id)}
+		<HStack
+			key={item._id}
+			justifyContent="start"
+			spacing={5}
+			h="200px"
+			minW="400px"
+			maxW="650px"
+			borderWidth="1px"
+			rounded="lg"
+			shadow="lg"
+		>
+			<LinkBox
+				as={ReactRouterLink}
+				to={`/product/${item._id}`}
+				w="40%"
+				h="100%"
+			>
+				<Image src={item.image} alt={item.name} fit="cover" />
+			</LinkBox>
+			<VStack h="100%" justifyContent="space-between" w="60%" pr={4}>
+				<Stack spacing={3} py={2} isTruncated maxH="80%" w="100%">
+					<Text
+						fontSize="xl"
+						whiteSpace="initial"
+						w="80%"
+						as={ReactRouterLink}
+						to={`/product/${item._id}`}
 					>
-						<i className="fas fa-trash"></i>
-					</Button>{' '}
-				</Col>
-			</Row>
-		</ListGroupItem>
+						{item.name}
+					</Text>
+					<Text fontSize="xl" w="20%">
+						${(item.price * quantity).toFixed(2)}
+					</Text>
+				</Stack>
+
+				<HStack justifyContent="space-between" width="100%">
+					<HStack maxW="200px" justifySelf="center" py={2}>
+						<IconButton
+							aria-label="Decrement quantity"
+							size="sm"
+							onClick={() =>
+								quantity > item.countInStock
+									? setQuantity(item.countInStock)
+									: setQuantity((prev) => prev - 1)
+							}
+							disabled={quantity <= 1}
+							icon={<FontAwesomeIcon icon={faMinus} />}
+						></IconButton>
+						<Input
+							pr="4.5rem"
+							type="text"
+							value={quantity}
+							variant="filled"
+							onChange={(e) => {
+								const parsedQty = Number.parseInt(e.target.value)
+								if (parsedQty) {
+									if (parsedQty > item.countInStock)
+										return setQuantity(item.countInStock)
+									else if (parsedQty < 0) return setQuantity(0)
+									else return setQuantity(parsedQty)
+								} else return setQuantity(1)
+							}}
+							isInvalid={quantity > item.countInStock && quantity !== 0}
+						/>
+						<IconButton
+							aria-label="Increment quantity"
+							size="sm"
+							onClick={() =>
+								quantity < 0 ? setQuantity(0) : setQuantity((prev) => prev + 1)
+							}
+							disabled={!canBeAddedToCart}
+							icon={<FontAwesomeIcon icon={faPlus} />}
+						></IconButton>
+					</HStack>
+					<HStack>
+						<IconButton
+							aria-label="Remove from cart"
+							size="sm"
+							color="red.500"
+							onClick={() => removeFromCartHandler(item._id)}
+							icon={<FontAwesomeIcon icon={faTrash} />}
+						></IconButton>
+					</HStack>
+				</HStack>
+			</VStack>
+		</HStack>
 	)
 }
 

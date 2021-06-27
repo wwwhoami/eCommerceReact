@@ -1,13 +1,17 @@
 import React from 'react'
-import { Alert } from 'react-bootstrap'
-
+import { Alert, AlertIcon } from '@chakra-ui/react'
 interface Props {
-	variant?: string
+	status?: 'info' | 'warning' | 'success' | 'error' | undefined
 	children: React.ReactNode | React.ReactNode[]
 }
 
-const Message = ({ variant = 'info', children }: Props) => {
-	return <Alert variant={variant}>{children}</Alert>
+const Message = ({ status = 'info', children }: Props) => {
+	return (
+		<Alert status={status} fontSize="2xl">
+			<AlertIcon boxSize="30px" />
+			{children}
+		</Alert>
+	)
 }
 
 export default Message

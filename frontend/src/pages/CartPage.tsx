@@ -1,54 +1,39 @@
-import React, { useEffect } from 'react'
-import {
-	Col,
-	ListGroup,
-	ListGroupItem,
-	Row,
-	Image,
-	Button,
-	FormControl,
-	InputGroup,
-} from 'react-bootstrap'
-import { useDispatch, useSelector } from 'react-redux'
+import { VStack } from '@chakra-ui/react'
+import React from 'react'
+import { useSelector } from 'react-redux'
 import { RouteComponentProps } from 'react-router'
-import { Link } from 'react-router-dom'
 import CartListItem from '../components/CartListItem'
 import Message from '../components/Message'
-import { addToCart, getCartItems } from '../reducers/cartReducer'
+import PageHeader from '../components/PageHeader'
+import { getCartItems } from '../reducers/cartReducer'
 
 type Params = {
 	id: string
 }
 
-interface Props extends RouteComponentProps<Params> {}
-
-const CartPage = ({ match, location, history }: Props) => {
-	const dispatch = useDispatch()
+const CartPage = ({
+	match,
+	location,
+	history,
+}: RouteComponentProps<Params>) => {
 	const cartItems = useSelector(getCartItems)
 
 	return (
 		<>
-			<Row>
-				<Col md={8}>
-					<h1>Shopping Cart</h1>
-					{cartItems.length === 0 ? (
-						<>
-							<Link to="/" className="btn btn-light my-3">
-								Go Back
-							</Link>
-							<Message>Your cart is empty</Message>
-						</>
-					) : (
-						<ListGroup variant="flush">
-							{cartItems.map((item) => (
-								<CartListItem item={item} />
-							))}
-						</ListGroup>
-					)}
-				</Col>
-				<Col md={2}></Col>
-				<Col md={2}></Col>
-			</Row>
+			<VStack spacing={14} alignItems="start">
+				<PageHeader>Shopping Cart</PageHeader>
+				{cartItems.length === 0 ? (
+					<>
+						<Message status="error">Your cart is empty</Message>
+					</>
+				) : (
+					<VStack spacing={10}>
+						{cartItems.map((item) => (
+							<CartListItem item={item} />
+						))}
+					</VStack>
+				)}
+			</VStack>
 		</>
 	)
 }

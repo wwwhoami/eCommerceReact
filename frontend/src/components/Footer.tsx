@@ -1,15 +1,31 @@
+import {
+	Box,
+	Container,
+	Stack,
+	useColorModeValue,
+	Text,
+} from '@chakra-ui/react'
 import React from 'react'
-import { Container, Row, Col } from 'react-bootstrap'
 
 const Footer = () => {
 	return (
-		<footer>
-			<Container>
-				<Row>
-					<Col className="text-center py-3">Copyrignt @eCommerceReact</Col>
-				</Row>
+		<Box
+			borderTopWidth={1}
+			borderStyle={'solid'}
+			borderColor={useColorModeValue('gray.200', 'gray.700')}
+		>
+			<Container
+				as={Stack}
+				maxW={'6xl'}
+				py={4}
+				direction={{ base: 'column', md: 'row' }}
+				spacing={4}
+				justify={{ md: 'space-between' }}
+				align={{ md: 'center' }}
+			>
+				<Text>2021 ©eCommerceReact</Text>
 			</Container>
-		</footer>
+		</Box>
 	)
 }
 

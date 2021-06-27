@@ -1,26 +1,36 @@
+import { Box, Icon } from '@chakra-ui/react'
+import { faStar as farStar } from '@fortawesome/free-regular-svg-icons'
+import { faStar, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 
 interface Props {
 	value: number
 	text: string
 	color?: string
+	fontSize?: string
+	iconSize?: number
 }
 
-const Rating = ({ value, text, color = 'orange' }: Props) => {
+const Rating = ({
+	value,
+	text,
+	color = 'orange',
+	fontSize = 'sm',
+	iconSize = 4,
+}: Props) => {
 	let starsJSX: Array<JSX.Element> = []
 	let fullStarCount = Math.trunc(value)
 	let floatPart = Number((value - fullStarCount).toFixed(2))
 	let emptyStarCount = Math.floor(5 - value)
 
-	const getFullStarJSX = () => <i style={{ color }} className="fas fa-star"></i>
+	const getFullStarJSX = () => <FontAwesomeIcon color={color} icon={faStar} />
 
 	const getHalfStarJSX = () => (
-		<i style={{ color }} className="fas fa-star-half-alt"></i>
+		<FontAwesomeIcon color={color} icon={faStarHalfAlt} />
 	)
 
-	const getEmptyStarJSX = () => (
-		<i style={{ color }} className="far fa-star"></i>
-	)
+	const getEmptyStarJSX = () => <FontAwesomeIcon color={color} icon={farStar} />
 
 	while (fullStarCount--) {
 		starsJSX.push(getFullStarJSX())
@@ -33,12 +43,22 @@ const Rating = ({ value, text, color = 'orange' }: Props) => {
 	}
 
 	return (
-		<div className="rating">
+		<Box d="flex" alignItems="center">
 			{starsJSX.map((star, index) => (
-				<span key={index}>{star}</span>
+				<Icon key={index} boxSize={iconSize} color={color}>
+					{star}
+				</Icon>
 			))}
-			<span>{text && text}</span>
-		</div>
+			<Box
+				as="span"
+				ml="2"
+				color="gray.600"
+				fontSize={fontSize}
+				whiteSpace="initial"
+			>
+				{text && text}
+			</Box>
+		</Box>
 	)
 }
 

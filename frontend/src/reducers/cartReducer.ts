@@ -5,7 +5,7 @@ import { CartItem, CartItemQty, CartState, IProduct, State } from '../types'
 const cartItemsFromStorage = localStorage.getItem('cartItems')
 
 const initialState: CartState = {
-	cart:
+	items:
 		typeof cartItemsFromStorage === 'string'
 			? JSON.parse(cartItemsFromStorage)
 			: [],
@@ -31,35 +31,35 @@ const cartReducer = createSlice({
 	initialState,
 	reducers: {
 		addCartItem(state, action: PayloadAction<CartItem>) {
-			const itemIdx = state.cart?.findIndex(
+			const itemIdx = state.items?.findIndex(
 				(item) => item._id === action.payload._id
 			)
-			if (itemIdx === -1) state.cart?.push(action.payload)
+			if (itemIdx === -1) state.items?.push(action.payload)
 			else {
-				if (action.payload.countInStock - state.cart[itemIdx].quantity >= 0)
-					state.cart[itemIdx].quantity += action.payload.quantity
+				if (action.payload.countInStock - state.items[itemIdx].quantity >= 0)
+					state.items[itemIdx].quantity += action.payload.quantity
 				else throw new Error('Not enough items in stock!')
 			}
 		},
 		removeCartItem(state, action: PayloadAction<string>) {
-			const itemIdx = state.cart?.findIndex(
+			const itemIdx = state.items?.findIndex(
 				(item) => item._id === action.payload
 			)
 			if (itemIdx !== -1) {
-				state.cart.splice(itemIdx, 1)
-				localStorage.setItem('cartItems', JSON.stringify(state.cart))
+				state.items.splice(itemIdx, 1)
+				localStorage.setItem('cartItems', JSON.stringify(state.items))
 			} else {
 				state.error.message = 'No such item in the cart!'
 			}
 		},
 		setCartItemQuantity(state, action: PayloadAction<CartItemQty>) {
-			const itemIdx = state.cart?.findIndex(
+			const itemIdx = state.items?.findIndex(
 				(item) => item._id === action.payload._id
 			)
 			if (itemIdx !== -1) {
 				console.log(new Error('Not enough items in stock!'))
-				if (state.cart[itemIdx].countInStock - action.payload.quantity >= 0)
-					state.cart[itemIdx].quantity = action.payload.quantity
+				if (state.items[itemIdx].countInStock - action.payload.quantity >= 0)
+					state.items[itemIdx].quantity = action.payload.quantity
 				else state.error.message = 'Not enough items in stock!'
 			} else state.error.message = 'No such item in the cart!'
 		},
@@ -71,7 +71,7 @@ const cartReducer = createSlice({
 			})
 			.addCase(addToCart.fulfilled, (state) => {
 				state.status = 'finished'
-				localStorage.setItem('cartItems', JSON.stringify(state.cart))
+				localStorage.setItem('cartItems', JSON.stringify(state.items))
 			})
 			.addCase(addToCart.rejected, (state, action) => {
 				state.status = 'error'
@@ -80,23 +80,31 @@ const cartReducer = createSlice({
 	},
 })
 
-export const getCartItems = (state: State) => state.cart.cart
+export const getCartItems = (state: State) => state.cart.items
 
-export const getCartItemsCount = (state: State) => state.cart.cart.length
+export const getCartItemsCount = (state: State) =>
+	state.cart.items.length
+		? state.cart.items.reduce((itemReducer, item) => ({
+				...itemReducer,
+				quantity: itemReducer.quantity + item.quantity,
+		  })).quantity
+		: 0
 
 export const getCartItemById = (state: State) => (id: string | undefined) =>
-	state.cart.cart.find((item) => item._id === id)
+	state.cart.items.find((item) => item._id === id)
 
-export const itemCanBeAddedToCart = (state: State) => (
-	id: string | undefined
-) => {
-	const itemInCart = state.cart.cart.find((item) => item._id === id)
-	return itemInCart ? itemInCart.countInStock - itemInCart.quantity >= 0 : true
-}
+export const itemCanBeAddedToCart =
+	(state: State) => (id: string | undefined) => {
+		const itemInCart = state.cart.items.find((item) => item._id === id)
+		return (
+			itemInCart === undefined ||
+			itemInCart.countInStock - itemInCart.quantity > 0
+		)
+	}
 
-export const {
-	addCartItem,
-	removeCartItem,
-	setCartItemQuantity,
-} = cartReducer.actions
+export const getCartItemQuantity = (state: State) => (id: string | undefined) =>
+	state.cart.items.find((item) => item._id === id)?.quantity || 0
+
+export const { addCartItem, removeCartItem, setCartItemQuantity } =
+	cartReducer.actions
 export default cartReducer.reducer
