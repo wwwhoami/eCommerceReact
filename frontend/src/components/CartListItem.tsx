@@ -6,6 +6,7 @@ import {
 	LinkBox,
 	Stack,
 	Text,
+	Tooltip,
 	VStack,
 } from '@chakra-ui/react'
 import { faMinus, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
@@ -44,7 +45,8 @@ const CartListItem = ({ item }: Props) => {
 			spacing={5}
 			h="200px"
 			minW="400px"
-			maxW="650px"
+			w="100%"
+			maxW="700px"
 			borderWidth="1px"
 			rounded="lg"
 			shadow="lg"
@@ -55,7 +57,7 @@ const CartListItem = ({ item }: Props) => {
 				w="40%"
 				h="100%"
 			>
-				<Image src={item.image} alt={item.name} fit="cover" />
+				<Image src={item.image} alt={item.name} fit="cover" h="100%" />
 			</LinkBox>
 			<VStack h="100%" justifyContent="space-between" w="60%" pr={4}>
 				<Stack spacing={3} py={2} isTruncated maxH="80%" w="100%">
@@ -113,13 +115,15 @@ const CartListItem = ({ item }: Props) => {
 						></IconButton>
 					</HStack>
 					<HStack>
-						<IconButton
-							aria-label="Remove from cart"
-							size="sm"
-							color="red.500"
-							onClick={() => removeFromCartHandler(item._id)}
-							icon={<FontAwesomeIcon icon={faTrash} />}
-						></IconButton>
+						<Tooltip label="Remove from cart" fontSize="md">
+							<IconButton
+								aria-label="Remove from cart"
+								size="sm"
+								color="red.500"
+								onClick={() => removeFromCartHandler(item._id)}
+								icon={<FontAwesomeIcon icon={faTrash} />}
+							></IconButton>
+						</Tooltip>
 					</HStack>
 				</HStack>
 			</VStack>

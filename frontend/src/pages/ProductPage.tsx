@@ -51,7 +51,7 @@ const ProductPage = ({ match, location }: RouteComponentProps<Params>) => {
 	useEffect(() => {
 		const quantityQuerry = Number(location.search.split('=')[1])
 		if (quantityQuerry <= availableQuantity) setQuantity(quantityQuerry)
-		else setQuantity(availableQuantity)
+		else setQuantity(0)
 	}, [availableQuantity, canBeAddedToCartStore, dispatch, location.search])
 
 	const addToCartHandler = () => {

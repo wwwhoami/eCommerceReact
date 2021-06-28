@@ -6,7 +6,8 @@ import {
 	Flex,
 	Icon,
 	IconButton,
-	Link, Popover,
+	Link,
+	Popover,
 	PopoverContent,
 	PopoverTrigger,
 	Stack,
@@ -14,14 +15,15 @@ import {
 	Tooltip,
 	useBreakpointValue,
 	useColorModeValue,
-	useDisclosure
+	useDisclosure,
+	Center,
 } from '@chakra-ui/react'
 import {
 	faBars,
 	faChevronDown,
 	faChevronRight,
 	faShoppingBasket,
-	faTimes
+	faTimes,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
@@ -29,140 +31,144 @@ import { useSelector } from 'react-redux'
 import { Link as ReactRouterLink } from 'react-router-dom'
 import { getCartItemsCount } from '../reducers/cartReducer'
 
-
 const Header = () => {
 	const countInCart = useSelector(getCartItemsCount)
 	const { isOpen, onToggle } = useDisclosure()
 
 	return (
-		<>
-			<Box position="fixed" top="0" width="100%" zIndex="1">
+		<Center
+			display="block"
+			position="fixed"
+			top="0"
+			width="100%"
+			zIndex="1"
+			maxW="1200px"
+		>
+			<Flex
+				bg={useColorModeValue('white', 'gray.800')}
+				color={useColorModeValue('gray.600', 'white')}
+				minH="14"
+				py={{ base: 2 }}
+				px={{ base: 4, xl: 0 }}
+				borderBottom="1"
+				borderStyle="solid"
+				borderColor={useColorModeValue('gray.200', 'gray.900')}
+				align="center"
+			>
 				<Flex
-					bg={useColorModeValue('white', 'gray.800')}
-					color={useColorModeValue('gray.600', 'white')}
-					minH="14"
-					py={{ base: 2 }}
-					px={{ base: 4 }}
-					borderBottom="1"
-					borderStyle="solid"
-					borderColor={useColorModeValue('gray.200', 'gray.900')}
-					align="center"
+					flex={{ base: 1, md: 'auto' }}
+					ml={{ base: -2 }}
+					display={{ base: 'flex', md: 'none' }}
 				>
-					<Flex
-						flex={{ base: 1, md: 'auto' }}
-						ml={{ base: -2 }}
-						display={{ base: 'flex', md: 'none' }}
+					<IconButton
+						onClick={onToggle}
+						icon={
+							isOpen ? (
+								<FontAwesomeIcon width={3} height={3} icon={faTimes} />
+							) : (
+								<FontAwesomeIcon width={5} height={5} icon={faBars} />
+							)
+						}
+						variant="ghost"
+						aria-label="Toggle Navigation"
+					/>
+				</Flex>
+				<Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
+					<Link
+						as={ReactRouterLink}
+						to="/"
+						textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
+						fontFamily="heading"
+						fontSize="lg"
+						fontWeight={600}
+						color={useColorModeValue('gray.800', 'white')}
+						_hover={{
+							textDecor: 'none',
+							color: useColorModeValue('gray.500', 'gray.200'),
+						}}
 					>
-						<IconButton
-							onClick={onToggle}
-							icon={
-								isOpen ? (
-									<FontAwesomeIcon width={3} height={3} icon={faTimes} />
-								) : (
-									<FontAwesomeIcon width={5} height={5} icon={faBars} />
-								)
-							}
-							variant="ghost"
-							aria-label="Toggle Navigation"
-						/>
+						eCommerceReact
+					</Link>
+
+					<Flex display={{ base: 'none', md: 'flex' }} ml={10}>
+						<DesktopNav />
 					</Flex>
-					<Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
-						<Link
-							as={ReactRouterLink}
-							to="/"
-							textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
-							fontFamily="heading"
-							fontSize="lg"
-							fontWeight={600}
-							color={useColorModeValue('gray.800', 'white')}
-							_hover={{
-								textDecor: 'none',
-								color: useColorModeValue('gray.500', 'gray.200'),
-							}}
-						>
-							eCommerceReact
-						</Link>
-
-						<Flex display={{ base: 'none', md: 'flex' }} ml={10}>
-							<DesktopNav />
-						</Flex>
-					</Flex>
-
-					<Stack
-						flex={{ base: 1, md: 0 }}
-						justify="flex-end"
-						direction="row"
-						spacing={6}
-					>
-						<Tooltip label="Shopping cart" fontSize="md">
-							<IconButton
-								as={ReactRouterLink}
-								to="/cart"
-								isRound
-								size="md"
-								aria-label="To Shopping Cart"
-								variant="ghost"
-								bg="white"
-								icon={
-									<>
-										<FontAwesomeIcon icon={faShoppingBasket} />
-										{countInCart !== 0 && (
-											<chakra.span
-												pos="absolute"
-												top="1"
-												right="1"
-												px={2}
-												py={1}
-												fontSize="xs"
-												fontWeight="bold"
-												lineHeight="none"
-												color="red.100"
-												transform="translate(50%,-50%)"
-												bg="red.600"
-												rounded="full"
-											>
-												{countInCart}
-											</chakra.span>
-										)}
-									</>
-								}
-							/>
-						</Tooltip>
-
-						<Button
-							as={ReactRouterLink}
-							to="/sign-in"
-							fontSize="sm"
-							fontWeight={400}
-							variant="link"
-						>
-							Sign In
-						</Button>
-						<Button
-							as={ReactRouterLink}
-							to="/sign-up"
-							textDecoration="none"
-							display={{ base: 'none', md: 'inline-flex' }}
-							fontSize="sm"
-							fontWeight={600}
-							color="white"
-							bg="pink.400"
-							_hover={{
-								bg: 'pink.300',
-								textDecor: 'none',
-								color: 'white',
-							}}
-						>
-							Sign Up
-						</Button>
-					</Stack>
 				</Flex>
 
-				<Collapse in={isOpen} animateOpacity>
-					<MobileNav />
-				</Collapse>
-			</Box>
-		</>
+				<Stack
+					flex={{ base: 1, md: 0 }}
+					justify="flex-end"
+					direction="row"
+					spacing={6}
+				>
+					<Tooltip label="Shopping cart" fontSize="md">
+						<IconButton
+							as={ReactRouterLink}
+							to="/cart"
+							isRound
+							size="md"
+							aria-label="To Shopping Cart"
+							variant="ghost"
+							bg="white"
+							icon={
+								<>
+									<FontAwesomeIcon icon={faShoppingBasket} />
+									{countInCart !== 0 && (
+										<chakra.span
+											pos="absolute"
+											top="1"
+											right="1"
+											px={2}
+											py={1}
+											fontSize="xs"
+											fontWeight="bold"
+											lineHeight="none"
+											color="red.100"
+											transform="translate(50%,-50%)"
+											bg="red.600"
+											rounded="full"
+										>
+											{countInCart}
+										</chakra.span>
+									)}
+								</>
+							}
+						/>
+					</Tooltip>
+
+					<Button
+						as={ReactRouterLink}
+						to="/sign-in"
+						fontSize="sm"
+						fontWeight={400}
+						variant="link"
+					>
+						Sign In
+					</Button>
+					<Button
+						as={ReactRouterLink}
+						to="/sign-up"
+						textDecoration="none"
+						display={{ base: 'none', md: 'inline-flex' }}
+						fontSize="sm"
+						fontWeight={600}
+						color="white"
+						bg="pink.400"
+						_hover={{
+							bg: 'pink.300',
+							textDecor: 'none',
+							color: 'white',
+						}}
+					>
+						Sign Up
+					</Button>
+				</Stack>
+			</Flex>
+
+			<Collapse in={isOpen} animateOpacity>
+				<MobileNav />
+			</Collapse>
+		</Center>
 	)
 }
 const DesktopNav = () => {
