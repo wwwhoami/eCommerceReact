@@ -18,17 +18,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RouteComponentProps } from 'react-router-dom'
-import Message from '../components/Message'
-import PageHeader from '../components/PageHeader'
-import Rating from '../components/Rating'
+import Message from '../components/util/Message'
+import PageHeader from '../components/util/PageHeader'
+import Rating from '../components/util/Rating'
 import {
-	addToCart,
 	getCartItemQuantity,
 	itemCanBeAddedToCart,
+	addToCart,
 } from '../reducers/cartReducer'
 import {
-	fetchProductById,
 	getProductDetailsState,
+	fetchProductById,
 } from '../reducers/productDetailsReducer'
 interface Params {
 	id: string

@@ -1,8 +1,8 @@
 import { Box, Image, useColorModeValue } from '@chakra-ui/react'
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { IProduct } from '../types'
-import Rating from './Rating'
+import { IProduct } from '../../types'
+import Rating from '../util/Rating'
 
 interface Props {
 	product: IProduct

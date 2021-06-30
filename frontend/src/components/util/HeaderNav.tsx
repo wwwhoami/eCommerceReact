@@ -29,7 +29,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link as ReactRouterLink } from 'react-router-dom'
-import { getCartItemsCount } from '../reducers/cartReducer'
+import { getCartItemsCount } from '../../reducers/cartReducer'
 
 const Header = () => {
 	const countInCart = useSelector(getCartItemsCount)

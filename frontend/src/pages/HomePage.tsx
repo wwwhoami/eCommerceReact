@@ -1,12 +1,12 @@
 import { Center, SimpleGrid, Skeleton } from '@chakra-ui/react'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import Message from '../components/Message'
-import PageHeader from '../components/PageHeader'
-import ProductCard from '../components/ProductCard'
+import ProductCard from '../components/product/ProductCard'
+import Message from '../components/util/Message'
+import PageHeader from '../components/util/PageHeader'
 import {
-	fetchProducts,
 	getProductListState,
+	fetchProducts,
 } from '../reducers/productListReducer'
 
 const HomePage = () => {

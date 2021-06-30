@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs'
-import { User } from '../types'
+import { IUser } from '../types'
 
-const users: User[] = [
+const users = [
 	{
 		name: 'Admin',
 		email: 'admin@example.com',

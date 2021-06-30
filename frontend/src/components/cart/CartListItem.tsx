@@ -17,9 +17,9 @@ import {
 	itemCanBeAddedToCart,
 	removeCartItem,
 	setCartItemQuantity,
-} from '../reducers/cartReducer'
+} from '../../reducers/cartReducer'
 import { Link as ReactRouterLink } from 'react-router-dom'
-import { CartItem } from '../types'
+import { CartItem } from '../../types'
 
 interface Props {
 	item: CartItem
