@@ -19,23 +19,13 @@ const CartPage = ({
 }: RouteComponentProps<Params>) => {
 	const cartItems = useSelector(getCartItems)
 
-	const totalItemQty = cartItems
-		.map((cartItem) => cartItem.quantity)
-		.reduce((itemQtyAccumulator, qty) => itemQtyAccumulator + qty)
-
-	const totalCost = cartItems
-		.map((cartItem) => cartItem.quantity * cartItem.price)
-		.reduce((costAccumulator, itemCost) => costAccumulator + itemCost)
-		.toFixed(2)
-
 	return (
 		<Stack>
 			<VStack spacing={4} alignItems="start">
 				<PageHeader>Shopping Cart</PageHeader>
-				{cartItems.length === 0 ? (
+				{!cartItems || cartItems.length === 0 ? (
 					<Message status="error">Your cart is empty</Message>
 				) : (
-					// !!TODO
 					<Stack
 						w="100%"
 						maxW="1200px"
@@ -45,7 +35,17 @@ const CartPage = ({
 						spacing={0}
 					>
 						<CartList cartItems={cartItems} />
-						<CartSummary totalItemQty={totalItemQty} totalCost={totalCost} />
+						<CartSummary
+							totalItemQty={cartItems
+								.map((cartItem) => cartItem.quantity)
+								.reduce((itemQtyAccumulator, qty) => itemQtyAccumulator + qty)}
+							totalCost={cartItems
+								.map((cartItem) => cartItem.quantity * cartItem.price)
+								.reduce(
+									(costAccumulator, itemCost) => costAccumulator + itemCost
+								)
+								.toFixed(2)}
+						/>
 					</Stack>
 				)}
 			</VStack>

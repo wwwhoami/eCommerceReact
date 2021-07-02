@@ -4,11 +4,10 @@ import User from '../models/userModel'
 import { TokenInterface } from './../types'
 
 export const protect = asyncHandler(async (req, res, next) => {
-	const { authorization } = req.headers
+	const token = req.cookies.token
 
-	if (authorization?.startsWith('Bearer')) {
+	if (token) {
 		try {
-			const token = authorization.split(' ')[1]
 			const decoded = verify(token, process.env.JWT_SECRET as string)
 
 			req.user = (await User.findById((decoded as TokenInterface).id).select(

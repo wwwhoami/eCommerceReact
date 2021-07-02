@@ -78,6 +78,7 @@ const CartListItem = ({ item }: Props) => {
 				<HStack justifyContent="space-between" width="100%">
 					<HStack maxW="200px" justifySelf="center" py={2}>
 						<IconButton
+							rounded="lg"
 							aria-label="Decrement quantity"
 							size="sm"
 							onClick={() =>
@@ -106,6 +107,7 @@ const CartListItem = ({ item }: Props) => {
 						/>
 						<IconButton
 							aria-label="Increment quantity"
+							rounded="lg"
 							size="sm"
 							onClick={() =>
 								quantity < 0 ? setQuantity(0) : setQuantity((prev) => prev + 1)
@@ -118,6 +120,7 @@ const CartListItem = ({ item }: Props) => {
 						<Tooltip label="Remove from cart" fontSize="md">
 							<IconButton
 								aria-label="Remove from cart"
+								rounded="lg"
 								size="sm"
 								color="red.500"
 								onClick={() => removeFromCartHandler(item._id)}

@@ -1,6 +1,13 @@
-import { Box, Image, useColorModeValue } from '@chakra-ui/react'
+import {
+	Box,
+	Image,
+	LinkBox,
+	useColorModeValue,
+	Text,
+	LinkOverlay,
+} from '@chakra-ui/react'
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link as ReactRouterLink } from 'react-router-dom'
 import { IProduct } from '../../types'
 import Rating from '../util/Rating'
 
@@ -10,7 +17,7 @@ interface Props {
 
 const ProductCard = ({ product }: Props) => {
 	return (
-		<Box
+		<LinkBox
 			bg={useColorModeValue('white', 'gray.800')}
 			maxW="sm"
 			borderWidth="1px"
@@ -22,26 +29,40 @@ const ProductCard = ({ product }: Props) => {
 			}}
 			transition=".2s ease-in"
 		>
-			<Image src={product.image} alt={`Picture of ${product.name}`} />
-			<Box p="6">
-				<Box
-					as="h4"
+			<Image
+				src={product.image}
+				alt={`Picture of ${product.name}`}
+				fit="cover"
+			/>
+			<Box p="6" overflow="hidden">
+				<LinkOverlay
+					as={ReactRouterLink}
+					to={`/product/${product._id}`}
+					my={2}
 					fontSize="xl"
 					fontWeight="semibold"
 					lineHeight="tight"
+					overflow="hidden"
+					textOverflow="eclipsis"
+					whiteSpace="nowrap"
+					display="block"
 					isTruncated
 				>
 					{product.name}
-				</Box>
+				</LinkOverlay>
 
 				<Rating value={product.rating} text={`${product.numReviews} reviews`} />
 
-				<Box fontSize="xl" color={useColorModeValue('gray.800', 'white')}>
+				<Text
+					my={2}
+					fontSize="xl"
+					color={useColorModeValue('gray.800', 'white')}
+				>
 					${product.price}
-				</Box>
-				<Link to={`/product/${product._id}`} className="stretched-link"></Link>
+				</Text>
+				{/* <Link to={`/product/${product._id}`} className="stretched-link"></Link> */}
 			</Box>
-		</Box>
+		</LinkBox>
 	)
 }
 

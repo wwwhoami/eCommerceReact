@@ -10,10 +10,7 @@ export const fetchProducts = createAsyncThunk(
 	}
 )
 
-const initialState: ProductListState = {
-	status: 'finished',
-	products: [],
-}
+const initialState: ProductListState = {}
 
 const productReducer = createSlice({
 	name: 'productList',
@@ -23,10 +20,12 @@ const productReducer = createSlice({
 		builder
 			.addCase(fetchProducts.pending, (state) => {
 				state.status = 'loading'
+				state.error = undefined
 			})
 			.addCase(fetchProducts.fulfilled, (state, action) => {
 				state.status = 'finished'
 				state.products = action.payload
+				state.error = undefined
 			})
 			.addCase(fetchProducts.rejected, (state, action) => {
 				state.status = 'error'

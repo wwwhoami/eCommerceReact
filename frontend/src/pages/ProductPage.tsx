@@ -44,6 +44,8 @@ const ProductPage = ({ match, location }: RouteComponentProps<Params>) => {
 	const availableQuantity = (product?.countInStock || 0) - quantityInCart
 	const toast = useToast()
 
+	console.log(canBeAddedToCartStore)
+
 	useEffect(() => {
 		dispatch(fetchProductById(match.params.id))
 	}, [dispatch, match])

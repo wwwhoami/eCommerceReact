@@ -22,26 +22,39 @@ export type CartItemQty = {
 	quantity: number
 }
 
-export type ProductListState = {
-	status: 'loading' | 'finished' | 'error'
-	products?: IProduct[]
-	error?: SerializedError
+export type User = {
+	_id: string
+	name: string
+	email: string
+	isAdmin: boolean
+	tokenExpiresAt: number
 }
 
-export type ProductDetailsState = {
-	status: 'loading' | 'finished' | 'error'
-	product?: IProduct
-	error?: SerializedError
-}
-
-export type CartState = {
+type StateTemplate = {
 	status?: 'loading' | 'finished' | 'error'
-	items: CartItem[]
-	error: SerializedError
+	error?: SerializedError
+}
+
+export type ProductListState = StateTemplate & {
+	products?: IProduct[]
+}
+
+export type ProductDetailsState = StateTemplate & {
+	product?: IProduct
+}
+
+export type UserState = StateTemplate & {
+	user?: User
+}
+
+export type CartState = StateTemplate & {
+	items?: CartItem[]
+	// error: SerializedError
 }
 
 export type State = {
 	productList: ProductListState
 	productDetails: ProductDetailsState
 	cart: CartState
+	user: UserState
 }

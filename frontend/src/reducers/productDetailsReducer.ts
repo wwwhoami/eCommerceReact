@@ -2,9 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { IProduct, ProductDetailsState, State } from '../types'
 
-const initialState: ProductDetailsState = {
-	status: 'loading',
-}
+const initialState: ProductDetailsState = {}
 
 export const fetchProductById = createAsyncThunk(
 	'productDetails/fetchProductById',
@@ -22,10 +20,12 @@ const productDetails = createSlice({
 		builder
 			.addCase(fetchProductById.pending, (state) => {
 				state.status = 'loading'
+				state.error = undefined
 			})
 			.addCase(fetchProductById.fulfilled, (state, action) => {
 				state.status = 'finished'
 				state.product = action.payload
+				state.error = undefined
 			})
 			.addCase(fetchProductById.rejected, (state, action) => {
 				state.status = 'error'

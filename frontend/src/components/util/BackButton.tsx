@@ -14,9 +14,6 @@ const BackButton = (props: Props) => {
 			onClick={history.goBack}
 			leftIcon={<FontAwesomeIcon icon={faChevronLeft} />}
 			variant="solid"
-			_hover={{
-				textDecor: 'none',
-			}}
 		>
 			Back
 		</Button>
