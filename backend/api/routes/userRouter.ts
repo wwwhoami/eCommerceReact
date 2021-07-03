@@ -1,7 +1,11 @@
-import { registerUser } from '../controllers/userController'
-import { protect } from '../../middleware/authMiddleware'
+import { checkAuth } from '../../middleware/authMiddleware'
 import express from 'express'
-import { authUser, getUserProfile } from '../controllers/userController'
+import {
+	authUser,
+	getUserProfileData,
+	logoutUser,
+	registerUser,
+} from '../controllers/userController'
 import {
 	validateEmail,
 	validatePassword,
@@ -23,6 +27,8 @@ userRouter
 
 userRouter.route('/login').post(validateEmail, validatePassword, authUser)
 
-userRouter.route('/profile').post(protect, getUserProfile)
+userRouter.route('/logout').delete(logoutUser)
+
+userRouter.route('/profile').get(checkAuth, getUserProfileData)
 
 export default userRouter

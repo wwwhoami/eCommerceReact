@@ -1,30 +1,29 @@
 import bcrypt from 'bcryptjs'
-import { IUser } from '../types'
 
 const users = [
 	{
-		name: 'Admin',
+		username: 'Admin',
 		email: 'admin@example.com',
 		password: bcrypt.hashSync('admin'),
 		isAdmin: true,
 	},
 	{
-		name: 'Johny Cage',
+		username: 'Johny Cage',
 		email: 'johny@example.com',
 		password: bcrypt.hashSync('123456'),
 	},
 	{
-		name: 'Morgan Doe',
+		username: 'Morgan Doe',
 		email: 'morgan@example.com',
 		password: bcrypt.hashSync('123456'),
 	},
 	{
-		name: 'Random Doe',
+		username: 'Random Doe',
 		email: 'random@example.com',
 		password: bcrypt.hashSync('123456'),
 	},
 	{
-		name: 'Alex Green',
+		username: 'Alex Green',
 		email: 'alex@example.com',
 		password: bcrypt.hashSync('123456'),
 	},

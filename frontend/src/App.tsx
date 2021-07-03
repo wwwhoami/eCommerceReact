@@ -1,21 +1,24 @@
 import { Box, Center } from '@chakra-ui/react'
 import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { createAxiosResponseInterceptor, getCsrfToken } from './api'
+import Header from './components/nav/HeaderNav'
 import LoginForm from './components/user/LoginForm'
 import Footer from './components/util/Footer'
-import Header from './components/nav/HeaderNav'
 import CartPage from './pages/CartPage'
 import HomePage from './pages/HomePage'
 import ProductPage from './pages/ProductPage'
-import axios from 'axios'
+import { fetchUserData } from './reducers/userReducer'
 
 function App() {
+	const dispatch = useDispatch()
 	useEffect(() => {
-		;(async () => {
-			const { data } = await axios.get('/api/csrf-token')
-			axios.defaults.headers['X-CSRF-Token'] = data.csrfToken
-		})()
-	}, [])
+		getCsrfToken()
+
+		createAxiosResponseInterceptor()
+		dispatch(fetchUserData())
+	}, [dispatch])
 
 	return (
 		<Router>

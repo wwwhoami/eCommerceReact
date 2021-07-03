@@ -40,6 +40,10 @@ const LoginForm = ({ onClose }: Props) => {
 
 	useEffect(() => {
 		if (status === 'finished') onClose()
+		else if (status === 'login error') {
+			setEmailError('Invalid email or password!')
+			setPasswordError('Invalid email or password!')
+		}
 	}, [onClose, status])
 
 	return (

@@ -21,16 +21,16 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link as ReactRouterLink } from 'react-router-dom'
 import { getCartItemsCount } from '../../reducers/cartReducer'
-import { isUserAuthenticated } from '../../reducers/userReducer'
+import { userIsLoggedIn } from '../../reducers/userReducer'
 import SignoutButton from '../user/SignOutButton'
-import SignupModal from '../user/SignupModal'
+import SignUpModal from '../user/SignUpModal'
 import DesktopNav from './DesktopNav'
 import MobileNav from './MobileNav'
 import { NavItems } from './NavItem'
 
 const Header = () => {
 	const countInCart = useSelector(getCartItemsCount)
-	const isAuthenticated = useSelector(isUserAuthenticated)
+	const isAuthenticated = useSelector(userIsLoggedIn)
 	const { isOpen, onToggle } = useDisclosure()
 
 	return (
@@ -134,7 +134,7 @@ const Header = () => {
 						/>
 					</Tooltip>
 
-					{isAuthenticated ? <SignoutButton /> : <SignupModal />}
+					{isAuthenticated ? <SignoutButton /> : <SignUpModal />}
 				</Stack>
 			</Flex>
 

@@ -1,12 +1,12 @@
-import { IUser } from '../../types'
-import { generateToken } from '../../utils/generateToken'
 import asyncHandler from 'express-async-handler'
-import User from '../../models/userModel'
 import { decode, JwtPayload } from 'jsonwebtoken'
+import Token from '../../models/tokenModel'
+import User from '../../models/userModel'
+import { IUser } from '../../types'
 
 /**
  * @desc   Auth user & get token
- * @route  POST /api/users/login
+ * @route  POST /api/user/login
  * @access PUBLIC
  */
 export const authUser = asyncHandler(async (req, res) => {
@@ -15,19 +15,23 @@ export const authUser = asyncHandler(async (req, res) => {
 	const user = await User.findOne({ email })
 
 	if (user && (await user.matchPassword(password))) {
-		const { _id, name, email, isAdmin } = user
-		const token = generateToken(_id)
-		const tokenExpiresAt = (decode(token) as JwtPayload).exp
+		const { _id, username, email, isAdmin } = user
+		const accessToken = await user.createAccessToken()
+		const accessTokenExpiry = (decode(accessToken) as JwtPayload).exp
 
-		res.cookie('token', token, {
+		const refreshToken = await user.createRefreshToken()
+
+		res.cookie('refreshToken', refreshToken, {
 			httpOnly: true,
 		})
+
 		res.json({
 			_id,
-			name,
+			username,
 			email,
 			isAdmin,
-			tokenExpiresAt,
+			accessToken,
+			accessTokenExpiry,
 		})
 	} else {
 		res.status(401)
@@ -36,22 +40,20 @@ export const authUser = asyncHandler(async (req, res) => {
 })
 
 /**
- * @desc   Get user profile
- * @route  POST /api/users/profile
+ * @desc   Get user profile data
+ * @route  GET /api/user/profile
  * @access PRIVATE
  */
-export const getUserProfile = asyncHandler(async (req, res) => {
+export const getUserProfileData = asyncHandler(async (req, res) => {
 	const user = req.user
 	if (user) {
-		const { _id, name, email, isAdmin } = user
-		res.send(
-			res.json({
-				_id,
-				name,
-				email,
-				isAdmin,
-			})
-		)
+		const { _id, username, email, isAdmin } = user
+		res.status(200).json({
+			_id,
+			username,
+			email,
+			isAdmin,
+		})
 	} else {
 		res.status(401)
 		throw new Error('Invalid email or password!')
@@ -64,36 +66,59 @@ export const getUserProfile = asyncHandler(async (req, res) => {
  * @access PUBLIC
  */
 export const registerUser = asyncHandler(async (req, res) => {
-	const { name, email, password } = req.body as IUser
+	const { username, email, password } = req.body as IUser
 
-	const userExists = await User.findOne({ email })
-	if (userExists) {
+	const userWithEmailExists = await User.findOne({ email })
+	const userWithUsernameExists = await User.findOne({ username })
+	if (userWithEmailExists) {
 		res.status(400)
-		throw new Error('User exists')
+		throw new Error('User with provided email exists')
+	} else if (userWithUsernameExists) {
+		res.status(400)
+		throw new Error('User with provided name exists')
 	}
 	const user = await User.create({
-		name,
+		username,
 		email,
 		password,
 	})
 	if (user) {
-		const { _id, name, email, isAdmin } = user
-		const token = generateToken(_id)
-		const tokenExpiresAt = (decode(token) as JwtPayload).exp
+		const { _id, username, email, isAdmin } = user
+		const accessToken = await user.createAccessToken()
+		const accessTokenExpiry = (decode(accessToken) as JwtPayload).exp
 
-		res.cookie('token', token, {
+		const refreshToken = await user.createRefreshToken()
+
+		res.cookie('refreshToken', refreshToken, {
 			httpOnly: true,
 		})
 
 		res.status(201).json({
 			_id,
-			name,
+			username,
 			email,
 			isAdmin,
-			tokenExpiresAt,
+			accessToken,
+			accessTokenExpiry,
 		})
 	} else {
 		res.status(400)
 		throw new Error('Invalid user data')
+	}
+})
+
+/**
+ * @desc   Logout a user
+ * @route  DELETE /api/user/logout
+ * @access PUBLIC
+ */
+export const logoutUser = asyncHandler(async (req, res) => {
+	try {
+		const { refreshToken } = req.cookies
+		await Token.findOneAndDelete({ token: refreshToken })
+		res.status(200).send()
+	} catch (error) {
+		res.status(500)
+		throw new Error('Internal server error')
 	}
 })

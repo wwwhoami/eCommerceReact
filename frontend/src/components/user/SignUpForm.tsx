@@ -7,27 +7,32 @@ import {
 	Input,
 	InputGroup,
 	InputRightElement,
-	useToast,
+	useToast
 } from '@chakra-ui/react'
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getStatus, userRegister } from '../../reducers/userReducer'
+import {
+	getErrorMessage,
+	getStatus,
+	userSignUp
+} from '../../reducers/userReducer'
 import {
 	validateEmail,
 	validatePassword,
 	validatePasswordConfirm,
-	validateUsername,
+	validateUsername
 } from './inputValidator'
 
 interface Props {
 	onClose: () => void
 }
 
-const RegisterForm = ({ onClose }: Props) => {
+const SignUpForm = ({ onClose }: Props) => {
 	const dispatch = useDispatch()
 	const status = useSelector(getStatus)
+	const signUpErrorMessage = useSelector(getErrorMessage)
 
 	const [username, setUsername] = useState('')
 	const [usernameError, setUsernameError] = useState('')
@@ -56,11 +61,11 @@ const RegisterForm = ({ onClose }: Props) => {
 			!passwordIsInvalid &&
 			!passwordConfirmIsInvalid
 		)
-			dispatch(userRegister({ username, email, password }))
+			dispatch(userSignUp({ username, email, password, passwordConfirm }))
 	}
 
 	useEffect(() => {
-		if (status === 'finished') {
+		if (status === 'created') {
 			toast({
 				title: 'Account created.',
 				description: "We've created your account for you.",
@@ -71,6 +76,14 @@ const RegisterForm = ({ onClose }: Props) => {
 			onClose()
 		}
 	}, [onClose, status, toast])
+
+	useEffect(() => {
+		if (signUpErrorMessage?.includes('email')) {
+			setEmailError(signUpErrorMessage)
+		} else if (signUpErrorMessage?.includes('name')) {
+			setUsernameError(signUpErrorMessage)
+		}
+	}, [signUpErrorMessage])
 
 	return (
 		<>
@@ -154,10 +167,10 @@ const RegisterForm = ({ onClose }: Props) => {
 				onClick={onSubmit}
 				isDisabled={!username && !email && !password && !passwordConfirm}
 			>
-				Sign in
+				Sign un
 			</Button>
 		</>
 	)
 }
 
-export default RegisterForm
+export default SignUpForm

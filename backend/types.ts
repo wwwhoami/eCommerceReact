@@ -1,3 +1,5 @@
+import { IUserDocument } from './models/userModel'
+
 export type Product = {
 	_id: string
 	name: string
@@ -12,17 +14,19 @@ export type Product = {
 }
 
 export interface IUser {
-	name: string
+	username: string
 	email: string
 	password: string
 	isAdmin: boolean
 	matchPassword: (password: string) => Promise<boolean>
+	createAccessToken: () => Promise<string>
+	createRefreshToken: () => Promise<string>
 }
 
 export interface TokenInterface {
-	id: string
+	_id: string
 	email: string
-	name: string
+	username: string
 }
 
 export interface HttpException extends Error {
@@ -33,7 +37,7 @@ export interface HttpException extends Error {
 declare global {
 	namespace Express {
 		interface Request {
-			user: (IUser & { _id: string }) | null
+			user: IUserDocument | null
 		}
 	}
 }

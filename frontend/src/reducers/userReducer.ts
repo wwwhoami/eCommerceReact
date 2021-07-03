@@ -1,26 +1,52 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import axios from 'axios'
-import { User, UserState, State } from '../types'
+import { AccessToken, State, User, UserState } from '../types'
 
-const userInfoFromStorage = localStorage.getItem('userInfo')
+// const userInfoFromStorage = localStorage.getItem('userInfo')
 
 const initialState: UserState = {
-	user: userInfoFromStorage && JSON.parse(userInfoFromStorage),
+	// user: userInfoFromStorage && JSON.parse(userInfoFromStorage),
 }
 
 export const userLogin = createAsyncThunk(
 	'user/userLogin',
 	async (userData: { email: string; password: string }) => {
-		const res = await axios.post<User>('/api/user/login', userData)
-		if (res.status === 200) return res.data
+		try {
+			const res = await axios.post<User>('/api/user/login', userData)
+			if (res.status === 200) return res.data
+		} catch (error) {
+			throw new Error(error.response.data.message)
+		}
 	}
 )
 
-export const userRegister = createAsyncThunk(
-	'user/userRegister',
-	async (userData: { username: string; email: string; password: string }) => {
-		const res = await axios.post<User>('/api/user', userData)
-		if (res.status === 201) return res.data
+export const userSignUp = createAsyncThunk(
+	'user/userSignUp',
+	async (userData: {
+		username: string
+		email: string
+		password: string
+		passwordConfirm: string
+	}) => {
+		try {
+			const res = await axios.post<User>('/api/user', userData)
+			if (res.status === 201) return res.data
+		} catch (error) {
+			throw new Error(error.response.data.message)
+		}
+	}
+)
+
+export const userLogout = createAsyncThunk('user/userLogout', async () => {
+	const res = await axios.delete('/api/user/logout')
+	if (res.status === 200) return res.data
+})
+
+export const fetchUserData = createAsyncThunk(
+	'user/fetchUserData',
+	async () => {
+		const res = await axios.get('/api/user/profile')
+		if (res.status === 200) return res.data
 	}
 )
 
@@ -28,9 +54,8 @@ const userReducer = createSlice({
 	name: 'user',
 	initialState,
 	reducers: {
-		userLogout: (state) => {
-			state.user = undefined
-			localStorage.removeItem('userInfo')
+		setAccessToken: (state, action: PayloadAction<AccessToken>) => {
+			state.user = { ...state.user, ...action.payload }
 		},
 	},
 	extraReducers: (builder) => {
@@ -44,36 +69,49 @@ const userReducer = createSlice({
 				state.user = action.payload
 
 				state.error = undefined
-				if (state.user) {
-					const { _id, name, email, isAdmin, tokenExpiresAt } = state.user
-					localStorage.setItem(
-						'userInfo',
-						JSON.stringify({ _id, name, email, isAdmin, tokenExpiresAt })
-					)
-				}
 			})
 			.addCase(userLogin.rejected, (state, action) => {
+				state.status = 'login error'
+				state.error = action.error
+			})
+
+			.addCase(userSignUp.pending, (state) => {
+				state.status = 'loading'
+				state.error = undefined
+			})
+			.addCase(userSignUp.fulfilled, (state, action) => {
+				state.status = 'created'
+				state.user = action.payload
+				state.error = undefined
+			})
+			.addCase(userSignUp.rejected, (state, action) => {
 				state.status = 'error'
 				state.error = action.error
 			})
 
-			.addCase(userRegister.pending, (state) => {
+			.addCase(userLogout.pending, (state) => {
 				state.status = 'loading'
 				state.error = undefined
 			})
-			.addCase(userRegister.fulfilled, (state, action) => {
-				state.status = 'finished'
-				state.user = action.payload
-				state.error = undefined
-				if (state.user) {
-					const { _id, name, email, isAdmin, tokenExpiresAt } = state.user
-					localStorage.setItem(
-						'userInfo',
-						JSON.stringify({ _id, name, email, isAdmin, tokenExpiresAt })
-					)
-				}
+			.addCase(userLogout.fulfilled, (state) => {
+				state.user = undefined
+				state.status = undefined
 			})
-			.addCase(userRegister.rejected, (state, action) => {
+			.addCase(userLogout.rejected, (state, action) => {
+				state.status = 'error'
+				state.error = action.error
+			})
+
+			.addCase(fetchUserData.pending, (state) => {
+				state.status = 'loading'
+				state.error = undefined
+			})
+			.addCase(fetchUserData.fulfilled, (state, action) => {
+				state.status = 'finished'
+				state.user = { ...state.user, ...action.payload }
+				state.error = undefined
+			})
+			.addCase(fetchUserData.rejected, (state, action) => {
 				state.status = 'error'
 				state.error = action.error
 			})
@@ -81,12 +119,19 @@ const userReducer = createSlice({
 })
 
 export const getUserData = (state: State) => state.user.user
+
 export const getStatus = (state: State) => state.user.status
 
-export const isUserAuthenticated = (state: State) =>
-	state?.user?.user?.tokenExpiresAt &&
-	new Date().getTime() / 1000 < state.user.user.tokenExpiresAt
+export const getErrorMessage = (state: State) => state.user.error?.message
 
-export const { userLogout } = userReducer.actions
+export const getAccessToken = (state: State) => state.user.user?.accessToken
+
+export const accessTokenExpired = (state: State) =>
+	!!state?.user?.user?.accessTokenExpiry &&
+	new Date().getTime() / 1000 >= state.user.user.accessTokenExpiry
+
+export const userIsLoggedIn = (state: State) => !!state?.user?.user
+
+export const { setAccessToken } = userReducer.actions
 
 export default userReducer.reducer

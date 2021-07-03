@@ -14,11 +14,11 @@ import {
 } from '@chakra-ui/react'
 import React from 'react'
 import LoginForm from './LoginForm'
-import RegisterForm from './RegisterForm'
+import SignUpForm from './SignUpForm'
 
 interface Props {}
 
-const SignupModal = (props: Props) => {
+const SignUpModal = (props: Props) => {
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	return (
 		<>
@@ -51,7 +51,7 @@ const SignupModal = (props: Props) => {
 									<LoginForm onClose={onClose} />
 								</TabPanel>
 								<TabPanel>
-									<RegisterForm onClose={onClose} />
+									<SignUpForm onClose={onClose} />
 								</TabPanel>
 							</TabPanels>
 						</Tabs>
@@ -62,4 +62,4 @@ const SignupModal = (props: Props) => {
 	)
 }
 
-export default SignupModal
+export default SignUpModal

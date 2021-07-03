@@ -22,13 +22,14 @@ export type CartItemQty = {
 	quantity: number
 }
 
+export type AccessToken = { accessToken: string; accessTokenExpiry: number }
+
 export type User = {
-	_id: string
-	name: string
-	email: string
-	isAdmin: boolean
-	tokenExpiresAt: number
-}
+	_id?: string
+	username?: string
+	email?: string
+	isAdmin?: Boolean
+} & AccessToken
 
 type StateTemplate = {
 	status?: 'loading' | 'finished' | 'error'
@@ -43,7 +44,8 @@ export type ProductDetailsState = StateTemplate & {
 	product?: IProduct
 }
 
-export type UserState = StateTemplate & {
+export type UserState = Omit<StateTemplate, 'status'> & {
+	status?: 'loading' | 'finished' | 'error' | 'created' | 'login error'
 	user?: User
 }
 

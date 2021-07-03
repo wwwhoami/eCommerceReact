@@ -13,18 +13,7 @@ const SignoutButton = (props: Props) => {
 	}
 
 	return (
-		<Button
-			display={{ base: 'none', md: 'inline-flex' }}
-			fontSize="sm"
-			fontWeight={600}
-			// color="white"
-			// bg="pink.400"
-			// _hover={{
-			// 	bg: 'pink.300',
-			// 	color: 'white',
-			// }}
-			onClick={onSignOut}
-		>
+		<Button fontSize="sm" fontWeight={600} onClick={onSignOut}>
 			Sign Out
 		</Button>
 	)
