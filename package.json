@@ -21,7 +21,8 @@
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.12.15"
+    "mongoose": "^5.12.15",
+    "redis": "^3.1.2"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
@@ -30,6 +31,7 @@
     "@types/express": "^4.17.12",
     "@types/jsonwebtoken": "^8.5.2",
     "@types/mongoose": "^5.11.97",
+    "@types/redis": "^2.8.30",
     "@typescript-eslint/eslint-plugin": "^4.28.1",
     "@typescript-eslint/parser": "^4.28.1",
     "concurrently": "^6.2.0",

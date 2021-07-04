@@ -37,7 +37,7 @@ const ProductCard = ({ product }: Props) => {
 			<Box p="6" overflow="hidden">
 				<LinkOverlay
 					as={ReactRouterLink}
-					to={`/product/${product._id}`}
+					to={`/product/${product.id}`}
 					my={2}
 					fontSize="xl"
 					fontWeight="semibold"

@@ -1,9 +1,8 @@
 import bcrypt from 'bcryptjs'
-import { Document, model, models, Schema } from 'mongoose'
 import { sign } from 'jsonwebtoken'
+import { Document, model, Schema } from 'mongoose'
+import redisClient from '../config/redis'
 import { IUser } from '../types'
-import Token from '../models/tokenModel'
-
 export interface IUserDocument extends IUser, Document {}
 
 const userSchema = new Schema<IUserDocument>(
@@ -38,11 +37,13 @@ userSchema.methods = {
 	},
 	createAccessToken: async function () {
 		try {
-			const { _id, username } = this
+			const { id, username } = this
+			const expiresIn = 600
+
 			const accessToken = sign(
-				{ user: { _id, username } },
+				{ user: { id, username } },
 				process.env.ACCESS_TOKEN_SECRET as string,
-				{ expiresIn: '10m' }
+				{ expiresIn }
 			)
 			return accessToken
 		} catch (error) {
@@ -51,14 +52,18 @@ userSchema.methods = {
 	},
 	createRefreshToken: async function () {
 		try {
-			const { _id, username } = this
+			let { id, username } = this
+			const expiresIn = 86400
+
 			const refreshToken = sign(
-				{ user: { _id, username } },
+				{ user: { id, username } },
 				process.env.REFRESH_TOKEN_SECRET as string,
-				{ expiresIn: '1d' }
+				{ expiresIn }
 			)
-			// TODO: SAVE REFRESH TOKEN TO REDIS
-			await new Token({ token: refreshToken }).save()
+
+			redisClient.set(id, refreshToken)
+			redisClient.expire(id, expiresIn)
+			// await new Token({ token: refreshToken }).save()
 			return refreshToken
 		} catch (error) {
 			throw new Error(error)

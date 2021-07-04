@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler'
-import { verify, sign, decode, JwtPayload } from 'jsonwebtoken'
-import Token from '../../models/tokenModel'
+import { decode, JwtPayload, sign, verify } from 'jsonwebtoken'
+import redisClient from '../../config/redis'
 
 /**
  * @desc   Generate refresh token
@@ -14,19 +14,18 @@ export const generateRefreshToken = asyncHandler(async (req, res) => {
 		res.status(403)
 		throw new Error('Access denied: token missing')
 	} else {
-		const tokenDoc = await Token.findOne({ token: refreshToken })
-
-		if (!tokenDoc) {
+		const decoded = verify(
+			refreshToken,
+			process.env.REFRESH_TOKEN_SECRET as string
+		)
+		const id: string = (decoded as JwtPayload)['user']['id']
+		const tokenValue = redisClient.get(id)
+		if (!tokenValue) {
 			res.status(401)
 			throw new Error('Token expired')
 		} else {
-			const payload = verify(
-				tokenDoc.token,
-				process.env.REFRESH_TOKEN_SECRET as string
-			)
-
 			const accessToken = sign(
-				{ user: (payload as JwtPayload)['user'] },
+				{ user: (decoded as JwtPayload)['user'] },
 				process.env.ACCESS_TOKEN_SECRET as string,
 				{
 					expiresIn: '10m',

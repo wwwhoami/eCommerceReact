@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler'
-import { decode, JwtPayload } from 'jsonwebtoken'
-import Token from '../../models/tokenModel'
+import { decode, JwtPayload, verify } from 'jsonwebtoken'
+import redisClient from '../../config/redis'
 import User from '../../models/userModel'
 import { IUser } from '../../types'
 
@@ -15,7 +15,7 @@ export const authUser = asyncHandler(async (req, res) => {
 	const user = await User.findOne({ email })
 
 	if (user && (await user.matchPassword(password))) {
-		const { _id, username, email, isAdmin } = user
+		const { id, username, email, isAdmin } = user
 		const accessToken = await user.createAccessToken()
 		const accessTokenExpiry = (decode(accessToken) as JwtPayload).exp
 
@@ -26,7 +26,7 @@ export const authUser = asyncHandler(async (req, res) => {
 		})
 
 		res.json({
-			_id,
+			id,
 			username,
 			email,
 			isAdmin,
@@ -47,9 +47,9 @@ export const authUser = asyncHandler(async (req, res) => {
 export const getUserProfileData = asyncHandler(async (req, res) => {
 	const user = req.user
 	if (user) {
-		const { _id, username, email, isAdmin } = user
+		const { id, username, email, isAdmin } = user
 		res.status(200).json({
-			_id,
+			id,
 			username,
 			email,
 			isAdmin,
@@ -83,7 +83,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 		password,
 	})
 	if (user) {
-		const { _id, username, email, isAdmin } = user
+		const { id, username, email, isAdmin } = user
 		const accessToken = await user.createAccessToken()
 		const accessTokenExpiry = (decode(accessToken) as JwtPayload).exp
 
@@ -94,7 +94,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 		})
 
 		res.status(201).json({
-			_id,
+			id,
 			username,
 			email,
 			isAdmin,
@@ -115,7 +115,15 @@ export const registerUser = asyncHandler(async (req, res) => {
 export const logoutUser = asyncHandler(async (req, res) => {
 	try {
 		const { refreshToken } = req.cookies
-		await Token.findOneAndDelete({ token: refreshToken })
+
+		const decoded = verify(
+			refreshToken,
+			process.env.REFRESH_TOKEN_SECRET as string
+		)
+		const id: string = (decoded as JwtPayload)['user']['id']
+
+		redisClient.del(id)
+
 		res.status(200).send()
 	} catch (error) {
 		res.status(500)

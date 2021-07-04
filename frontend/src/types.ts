@@ -1,7 +1,8 @@
 import { SerializedError } from '@reduxjs/toolkit'
+import store from './store'
 
 export interface IProduct {
-	_id: string
+	id: string
 	name: string
 	image: string
 	description: string
@@ -18,14 +19,14 @@ export type CartItem = IProduct & {
 }
 
 export type CartItemQty = {
-	_id: string
+	id: string
 	quantity: number
 }
 
 export type AccessToken = { accessToken: string; accessTokenExpiry: number }
 
 export type User = {
-	_id?: string
+	id?: string
 	username?: string
 	email?: string
 	isAdmin?: Boolean
@@ -46,17 +47,11 @@ export type ProductDetailsState = StateTemplate & {
 
 export type UserState = Omit<StateTemplate, 'status'> & {
 	status?: 'loading' | 'finished' | 'error' | 'created' | 'login error'
-	user?: User
+	userData?: User
 }
 
 export type CartState = StateTemplate & {
 	items?: CartItem[]
-	// error: SerializedError
 }
 
-export type State = {
-	productList: ProductListState
-	productDetails: ProductDetailsState
-	cart: CartState
-	user: UserState
-}
+export type RootState = ReturnType<typeof store.getState>

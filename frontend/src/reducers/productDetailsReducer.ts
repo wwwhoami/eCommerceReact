@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
-import { IProduct, ProductDetailsState, State } from '../types'
+import { IProduct, ProductDetailsState, RootState } from '../types'
 
 const initialState: ProductDetailsState = {}
 
@@ -34,6 +34,6 @@ const productDetails = createSlice({
 	},
 })
 
-export const getProductDetailsState = (state: State) => state.productDetails
+export const getProductDetailsState = (state: RootState) => state.productDetails
 
 export default productDetails.reducer

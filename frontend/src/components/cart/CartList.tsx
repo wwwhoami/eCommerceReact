@@ -11,7 +11,7 @@ function CartList({ cartItems }: Props): ReactElement {
 	return (
 		<VStack spacing={{ base: 4, md: 6, lg: 7 }} my={{ base: 10, lg: 0 }}>
 			{cartItems.map((item) => (
-				<CartListItem key={item._id} item={item} />
+				<CartListItem key={item.id} item={item} />
 			))}
 		</VStack>
 	)

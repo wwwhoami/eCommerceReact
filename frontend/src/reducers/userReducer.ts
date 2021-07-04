@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import axios from 'axios'
-import { AccessToken, State, User, UserState } from '../types'
+import { AccessToken, RootState, User, UserState } from '../types'
 
 // const userInfoFromStorage = localStorage.getItem('userInfo')
 
@@ -55,7 +55,7 @@ const userReducer = createSlice({
 	initialState,
 	reducers: {
 		setAccessToken: (state, action: PayloadAction<AccessToken>) => {
-			state.user = { ...state.user, ...action.payload }
+			state.userData = { ...state.userData, ...action.payload }
 		},
 	},
 	extraReducers: (builder) => {
@@ -66,7 +66,7 @@ const userReducer = createSlice({
 			})
 			.addCase(userLogin.fulfilled, (state, action) => {
 				state.status = 'finished'
-				state.user = action.payload
+				state.userData = action.payload
 
 				state.error = undefined
 			})
@@ -81,7 +81,7 @@ const userReducer = createSlice({
 			})
 			.addCase(userSignUp.fulfilled, (state, action) => {
 				state.status = 'created'
-				state.user = action.payload
+				state.userData = action.payload
 				state.error = undefined
 			})
 			.addCase(userSignUp.rejected, (state, action) => {
@@ -94,7 +94,7 @@ const userReducer = createSlice({
 				state.error = undefined
 			})
 			.addCase(userLogout.fulfilled, (state) => {
-				state.user = undefined
+				state.userData = undefined
 				state.status = undefined
 			})
 			.addCase(userLogout.rejected, (state, action) => {
@@ -108,7 +108,7 @@ const userReducer = createSlice({
 			})
 			.addCase(fetchUserData.fulfilled, (state, action) => {
 				state.status = 'finished'
-				state.user = { ...state.user, ...action.payload }
+				state.userData = { ...state.userData, ...action.payload }
 				state.error = undefined
 			})
 			.addCase(fetchUserData.rejected, (state, action) => {
@@ -118,19 +118,19 @@ const userReducer = createSlice({
 	},
 })
 
-export const getUserData = (state: State) => state.user.user
+export const getUserData = (state: RootState) => state.user.userData
 
-export const getStatus = (state: State) => state.user.status
+export const getStatus = (state: RootState) => state.user.status
 
-export const getErrorMessage = (state: State) => state.user.error?.message
+export const getErrorMessage = (state: RootState) => state.user.error?.message
 
-export const getAccessToken = (state: State) => state.user.user?.accessToken
+export const getAccessToken = (state: RootState) => state.user.userData?.accessToken
 
-export const accessTokenExpired = (state: State) =>
-	!!state?.user?.user?.accessTokenExpiry &&
-	new Date().getTime() / 1000 >= state.user.user.accessTokenExpiry
+export const accessTokenExpired = (state: RootState) =>
+	!!state?.user?.userData?.accessTokenExpiry &&
+	new Date().getTime() / 1000 >= state.user.userData.accessTokenExpiry
 
-export const userIsLoggedIn = (state: State) => !!state?.user?.user
+export const userIsLoggedIn = (state: RootState) => !!state?.user?.userData
 
 export const { setAccessToken } = userReducer.actions
 

@@ -12,7 +12,7 @@ export const checkAuth = asyncHandler(async (req, res, next) => {
 			const decoded = verify(token, process.env.ACCESS_TOKEN_SECRET as string)
 
 			req.user = await User.findById(
-				(decoded as JwtPayload)['user']['_id']
+				(decoded as JwtPayload)['user']['id']
 			).select('-password')
 		} catch (error) {
 			res.status(401)

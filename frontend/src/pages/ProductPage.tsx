@@ -38,7 +38,7 @@ const ProductPage = ({ match, location }: RouteComponentProps<Params>) => {
 	const dispatch = useDispatch()
 	const { product, status, error } = useSelector(getProductDetailsState)
 	const [quantity, setQuantity] = useState(0)
-	const itemId = product?._id
+	const itemId = product?.id
 	const quantityInCart = useSelector(getCartItemQuantity)(itemId)
 	const canBeAddedToCartStore = useSelector(itemCanBeAddedToCart)(itemId)
 	const availableQuantity = (product?.countInStock || 0) - quantityInCart

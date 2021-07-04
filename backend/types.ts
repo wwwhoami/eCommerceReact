@@ -1,7 +1,7 @@
 import { IUserDocument } from './models/userModel'
 
 export type Product = {
-	_id: string
+	id: string
 	name: string
 	image: string
 	description: string
@@ -24,7 +24,7 @@ export interface IUser {
 }
 
 export interface TokenInterface {
-	_id: string
+	id: string
 	email: string
 	username: string
 }

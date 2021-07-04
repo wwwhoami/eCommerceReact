@@ -51,5 +51,5 @@ export const setAccessTokenHeader = (accessToken: string) => {
 }
 
 export const removeAccessTokenHeader = () => {
-	axios.defaults.headers.common['Authorization'] = undefined
+	axios.defaults.headers.common['Authorization'] = null
 }
