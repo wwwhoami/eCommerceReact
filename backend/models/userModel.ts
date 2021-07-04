@@ -37,11 +37,11 @@ userSchema.methods = {
 	},
 	createAccessToken: async function () {
 		try {
-			const { id, username } = this
+			const { id } = this
 			const expiresIn = 600
 
 			const accessToken = sign(
-				{ user: { id, username } },
+				{ userId: id },
 				process.env.ACCESS_TOKEN_SECRET as string,
 				{ expiresIn }
 			)
@@ -52,11 +52,11 @@ userSchema.methods = {
 	},
 	createRefreshToken: async function () {
 		try {
-			let { id, username } = this
+			let { id } = this
 			const expiresIn = 86400
 
 			const refreshToken = sign(
-				{ user: { id, username } },
+				{ userId: id },
 				process.env.REFRESH_TOKEN_SECRET as string,
 				{ expiresIn }
 			)

@@ -9,9 +9,8 @@ const store = configureStore({
 		productList: productListReducer,
 		productDetails: productDetailsReducer,
 		cart: cartReducer,
-		user: userReducer
+		user: userReducer,
 	},
 })
-
 
 export default store

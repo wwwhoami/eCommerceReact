@@ -1,3 +1,4 @@
+import { updateUserProfileData } from './../controllers/userController'
 import { checkAuth } from '../../middleware/authMiddleware'
 import express from 'express'
 import {
@@ -29,6 +30,9 @@ userRouter.route('/login').post(validateEmail, validatePassword, authUser)
 
 userRouter.route('/logout').delete(logoutUser)
 
-userRouter.route('/profile').get(checkAuth, getUserProfileData)
+userRouter
+	.route('/profile')
+	.get(checkAuth, getUserProfileData)
+	.put(checkAuth, updateUserProfileData)
 
 export default userRouter

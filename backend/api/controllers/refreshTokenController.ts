@@ -18,14 +18,14 @@ export const generateRefreshToken = asyncHandler(async (req, res) => {
 			refreshToken,
 			process.env.REFRESH_TOKEN_SECRET as string
 		)
-		const id: string = (decoded as JwtPayload)['user']['id']
+		const id: string = (decoded as JwtPayload)['userId']
 		const tokenValue = await getAsync(id)
 		if (!tokenValue) {
 			res.status(401)
 			throw new Error('Token expired')
 		} else {
 			const accessToken = sign(
-				{ user: (decoded as JwtPayload)['user'] },
+				{ userId: (decoded as JwtPayload)['userId'] },
 				process.env.ACCESS_TOKEN_SECRET as string,
 				{
 					expiresIn: '10m',
