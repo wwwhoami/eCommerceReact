@@ -2,7 +2,7 @@ import { SerializedError } from '@reduxjs/toolkit'
 import store from './store'
 
 export interface IProduct {
-	id: string
+	_id: string
 	name: string
 	image: string
 	description: string

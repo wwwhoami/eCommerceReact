@@ -47,7 +47,7 @@ const HomePage = () => {
 						spacingY="40px"
 					>
 						{products?.map((product) => (
-							<ProductCard key={product.id} product={product} />
+							<ProductCard key={product._id} product={product} />
 						))}
 					</SimpleGrid>
 				</Center>

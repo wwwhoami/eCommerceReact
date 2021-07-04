@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler'
 import { decode, JwtPayload, sign, verify } from 'jsonwebtoken'
-import redisClient from '../../config/redis'
+import { getAsync } from './../../config/redis'
 
 /**
  * @desc   Generate refresh token
@@ -19,7 +19,7 @@ export const generateRefreshToken = asyncHandler(async (req, res) => {
 			process.env.REFRESH_TOKEN_SECRET as string
 		)
 		const id: string = (decoded as JwtPayload)['user']['id']
-		const tokenValue = redisClient.get(id)
+		const tokenValue = await getAsync(id)
 		if (!tokenValue) {
 			res.status(401)
 			throw new Error('Token expired')

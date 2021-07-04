@@ -29,7 +29,7 @@ const cartReducer = createSlice({
 		addCartItem(state, action: PayloadAction<CartItem>) {
 			if (state.items) {
 				const itemIdx = state.items.findIndex(
-					(item) => item.id === action.payload.id
+					(item) => item._id === action.payload._id
 				)
 				if (itemIdx === -1) state.items.push(action.payload)
 				else {
@@ -44,7 +44,7 @@ const cartReducer = createSlice({
 		removeCartItem(state, action: PayloadAction<string>) {
 			if (state.items && state.items.length !== 0) {
 				const itemIdx = state.items.findIndex(
-					(item) => item.id === action.payload
+					(item) => item._id === action.payload
 				)
 				if (itemIdx !== -1) {
 					state.items.splice(itemIdx, 1)
@@ -57,7 +57,7 @@ const cartReducer = createSlice({
 		setCartItemQuantity(state, action: PayloadAction<CartItemQty>) {
 			if (state.items && state.items.length !== 0) {
 				const itemIdx = state.items?.findIndex(
-					(item) => item.id === action.payload.id
+					(item) => item._id === action.payload.id
 				)
 				if (itemIdx !== -1) {
 					if (state.items[itemIdx].countInStock - action.payload.quantity >= 0)
@@ -97,12 +97,12 @@ export const getCartItemsCount = (state: RootState) =>
 		: 0
 
 export const getCartItemById = (state: RootState) => (id: string | undefined) =>
-	state?.cart?.items && state.cart.items.find((item) => item.id === id)
+	state?.cart?.items && state.cart.items.find((item) => item._id === id)
 
 export const itemCanBeAddedToCart =
 	(state: RootState) => (id: string | undefined) => {
 		const itemInCart =
-			state?.cart?.items && state.cart.items.find((item) => item.id === id)
+			state?.cart?.items && state.cart.items.find((item) => item._id === id)
 		if (itemInCart?.countInStock)
 			return itemInCart.countInStock - itemInCart.quantity > 0
 		return true
@@ -111,7 +111,7 @@ export const itemCanBeAddedToCart =
 export const getCartItemQuantity =
 	(state: RootState) => (id: string | undefined) =>
 		(state?.cart?.items &&
-			state.cart.items.find((item) => item.id === id)?.quantity) ||
+			state.cart.items.find((item) => item._id === id)?.quantity) ||
 		0
 
 export const { addCartItem, removeCartItem, setCartItemQuantity } =

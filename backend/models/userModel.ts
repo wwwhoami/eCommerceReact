@@ -63,7 +63,7 @@ userSchema.methods = {
 
 			redisClient.set(id, refreshToken)
 			redisClient.expire(id, expiresIn)
-			// await new Token({ token: refreshToken }).save()
+
 			return refreshToken
 		} catch (error) {
 			throw new Error(error)

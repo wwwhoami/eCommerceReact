@@ -78,7 +78,7 @@ const LoginForm = ({ onClose }: Props) => {
 							onClick={() => setShowPassword(!showPassword)}
 							rounded="full"
 							icon={
-								<FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
+								<FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
 							}
 						></IconButton>
 					</InputRightElement>
@@ -98,7 +98,7 @@ const LoginForm = ({ onClose }: Props) => {
 				mt={4}
 				isLoading={status === 'loading'}
 				onClick={onSubmit}
-				isDisabled={!email && !password}
+				isDisabled={!email || !password}
 			>
 				Sign in
 			</Button>

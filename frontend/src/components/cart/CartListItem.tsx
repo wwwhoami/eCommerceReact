@@ -28,19 +28,19 @@ interface Props {
 const CartListItem = ({ item }: Props) => {
 	const [quantity, setQuantity] = useState(item.quantity)
 	const dispatch = useDispatch()
-	const canBeAddedToCart = useSelector(itemCanBeAddedToCart)(item.id)
+	const canBeAddedToCart = useSelector(itemCanBeAddedToCart)(item._id)
 
 	const removeFromCartHandler = (id: string) => {
 		dispatch(removeCartItem(id))
 	}
 
 	useEffect(() => {
-		dispatch(setCartItemQuantity({ id: item.id, quantity }))
-	}, [quantity, dispatch, item.id, canBeAddedToCart])
+		dispatch(setCartItemQuantity({ id: item._id, quantity }))
+	}, [quantity, dispatch, item._id, canBeAddedToCart])
 
 	return (
 		<HStack
-			key={item.id}
+			key={item._id}
 			justifyContent="start"
 			spacing={5}
 			h="200px"
@@ -53,7 +53,7 @@ const CartListItem = ({ item }: Props) => {
 		>
 			<LinkBox
 				as={ReactRouterLink}
-				to={`/product/${item.id}`}
+				to={`/product/${item._id}`}
 				w="40%"
 				h="100%"
 			>
@@ -66,7 +66,7 @@ const CartListItem = ({ item }: Props) => {
 						whiteSpace="initial"
 						w="80%"
 						as={ReactRouterLink}
-						to={`/product/${item.id}`}
+						to={`/product/${item._id}`}
 					>
 						{item.name}
 					</Text>
@@ -123,7 +123,7 @@ const CartListItem = ({ item }: Props) => {
 								rounded="lg"
 								size="sm"
 								color="red.500"
-								onClick={() => removeFromCartHandler(item.id)}
+								onClick={() => removeFromCartHandler(item._id)}
 								icon={<FontAwesomeIcon icon={faTrash} />}
 							></IconButton>
 						</Tooltip>

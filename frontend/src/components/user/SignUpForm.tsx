@@ -7,7 +7,7 @@ import {
 	Input,
 	InputGroup,
 	InputRightElement,
-	useToast
+	useToast,
 } from '@chakra-ui/react'
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -16,13 +16,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
 	getErrorMessage,
 	getStatus,
-	userSignUp
+	userSignUp,
 } from '../../reducers/userReducer'
 import {
 	validateEmail,
 	validatePassword,
 	validatePasswordConfirm,
-	validateUsername
+	validateUsername,
 } from './inputValidator'
 
 interface Props {
@@ -130,7 +130,7 @@ const SignUpForm = ({ onClose }: Props) => {
 							onClick={() => setShowPassword(!showPassword)}
 							rounded="full"
 							icon={
-								<FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
+								<FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
 							}
 						></IconButton>
 					</InputRightElement>
