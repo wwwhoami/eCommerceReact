@@ -52,7 +52,7 @@ export function validateUsername(
 	res: Response,
 	next: NextFunction
 ) {
-	const usernameRegex = /^[a-zA-Z0-9]+$/
+	const usernameRegex = /^([a-zA-Z'-.]+(?: [a-zA-Z'-.]+)?)$/
 	const { username } = req.body
 
 	if (!username) {
@@ -60,7 +60,7 @@ export function validateUsername(
 		throw new Error('Username is required')
 	} else if (!usernameRegex.test(String(username).toLowerCase())) {
 		res.status(400)
-		throw new Error('Usernames can only have: letters and numbers')
+		throw new Error('Usernames can only have letters and spaces inbetween')
 	}
 	next()
 }

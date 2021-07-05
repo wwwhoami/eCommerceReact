@@ -75,14 +75,22 @@ const ProductPage = ({ match, location }: RouteComponentProps<Params>) => {
 				<Message status="error">Error: {error?.message}</Message>
 			) : (
 				<Center>
-					<Grid
-						templateColumns={{ lg: '6fr 3fr 4fr' }}
-						gap={{ sm: '40px', md: '50px' }}
+					<Stack
+						direction={{ base: 'column', lg: 'row' }}
+						w="100%"
+						justifyContent="space-between"
 						maxW="1400px"
-						mt="3"
+						mt={3}
+						my={3}
+						spacing={4}
 					>
 						<Skeleton isLoaded={status === 'finished'}>
-							<Stack isTruncated dir="column" spacing="3">
+							<Stack
+								isTruncated
+								dir="column"
+								spacing="4"
+								maxW={{ base: 'auto', lg: '700px' }}
+							>
 								<chakra.h1 fontSize="3xl" whiteSpace="initial">
 									{product?.name}
 								</chakra.h1>
@@ -92,15 +100,6 @@ const ProductPage = ({ match, location }: RouteComponentProps<Params>) => {
 									fit="cover"
 									align="center"
 								></Image>
-							</Stack>
-						</Skeleton>
-						<Skeleton isLoaded={status === 'finished'}>
-							<Stack
-								dir="column"
-								spacing="4"
-								divider={<StackDivider borderColor="gray.300" />}
-								justify={{ sm: 'center', md: 'start' }}
-							>
 								<Rating
 									value={product?.rating || 0}
 									text={`${product?.numReviews} reviews`}
@@ -108,12 +107,23 @@ const ProductPage = ({ match, location }: RouteComponentProps<Params>) => {
 									iconSize={6}
 								/>
 								<chakra.h2 fontSize="xl">Price: ${product?.price}</chakra.h2>
-
-								<chakra.p fontSize="md">{product?.description}</chakra.p>
+								<chakra.p fontSize="md" whiteSpace="initial">
+									{product?.description}
+								</chakra.p>
 							</Stack>
 						</Skeleton>
+						{/* <Skeleton isLoaded={status === 'finished'}>
+							<Stack
+								dir="column"
+								spacing="4"
+								divider={<StackDivider borderColor="gray.300" />}
+								justify={{ sm: 'center', md: 'start' }}
+							>
+							</Stack>
+						</Skeleton> */}
 						<Skeleton isLoaded={status === 'finished'}>
 							<Stack
+								w={{ base: 'auto', lg: 300 }}
 								dir="column"
 								spacing="10"
 								justify="center"
@@ -123,6 +133,12 @@ const ProductPage = ({ match, location }: RouteComponentProps<Params>) => {
 								borderWidth="1px"
 								rounded="lg"
 								shadow="lg"
+								fontSize="xl"
+								position="sticky"
+								top={{ base: '60px', lg: '80px' }}
+								justifyContent="space-around"
+								bgColor="white"
+								my={10}
 							>
 								<Text as="h2" fontSize="xl">
 									Status:{' '}
@@ -202,7 +218,7 @@ const ProductPage = ({ match, location }: RouteComponentProps<Params>) => {
 								</Button>
 							</Stack>
 						</Skeleton>
-					</Grid>
+					</Stack>
 				</Center>
 			)}
 		</>

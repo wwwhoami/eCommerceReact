@@ -46,7 +46,13 @@ export type ProductDetailsState = StateTemplate & {
 }
 
 export type UserState = Omit<StateTemplate, 'status'> & {
-	status?: 'loading' | 'finished' | 'error' | 'created' | 'login error'
+	status?:
+		| 'loading'
+		| 'finished'
+		| 'error'
+		| 'created'
+		| 'login error'
+		| 'updated'
 	userData?: User
 }
 

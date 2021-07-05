@@ -33,6 +33,12 @@ userRouter.route('/logout').delete(logoutUser)
 userRouter
 	.route('/profile')
 	.get(checkAuth, getUserProfileData)
-	.put(checkAuth, updateUserProfileData)
+	.put(
+		checkAuth,
+		validateUsername,
+		validateEmail,
+		validatePassword,
+		updateUserProfileData
+	)
 
 export default userRouter

@@ -9,7 +9,7 @@ import {
 	InputRightElement,
 	useToast,
 } from '@chakra-ui/react'
-import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons'
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,13 +17,13 @@ import {
 	getErrorMessage,
 	getStatus,
 	userSignUp,
-} from '../../reducers/userReducer'
+} from '../../../reducers/userReducer'
 import {
 	validateEmail,
 	validatePassword,
 	validatePasswordConfirm,
 	validateUsername,
-} from './inputValidator'
+} from '../inputValidator'
 
 interface Props {
 	onClose: () => void
@@ -167,7 +167,7 @@ const SignUpForm = ({ onClose }: Props) => {
 				onClick={onSubmit}
 				isDisabled={!username && !email && !password && !passwordConfirm}
 			>
-				Sign un
+				Sign Up
 			</Button>
 		</>
 	)

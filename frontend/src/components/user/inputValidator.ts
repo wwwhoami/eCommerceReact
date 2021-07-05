@@ -42,12 +42,24 @@ export const validatePasswordConfirm = validator(function checkPasswordConfirm(
 export const validateUsername = validator(function checkUsername(
 	username: string
 ) {
-	const usernameRegex = /^[a-zA-Z0-9]+$/
+	const usernameRegex = /^([a-zA-Z'-.]+(?: [a-zA-Z'-.]+)?)$/
 
 	if (!username) {
 		return 'Username is required'
-	} else if (!usernameRegex.test(String(username).toLowerCase())) {
-		return 'Usernames can only have letters and numbers'
+	} else if (!usernameRegex.test(username)) {
+		return 'Usernames can only have letters and spaces inbetween'
 	}
 	return ''
 })
+
+export const validatePasswordConfirmNotReq = validator(
+	function checkPasswordConfirmNotReq(
+		password: string,
+		passwordConfirm: string
+	) {
+		if (password !== passwordConfirm) {
+			return 'Password and password confirmation should match'
+		}
+		return ''
+	}
+)

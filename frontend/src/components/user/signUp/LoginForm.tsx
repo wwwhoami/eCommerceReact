@@ -1,5 +1,10 @@
 import {
+	Alert,
+	AlertDescription,
+	AlertIcon,
+	AlertTitle,
 	Button,
+	CloseButton,
 	FormControl,
 	FormErrorMessage,
 	FormLabel,
@@ -12,8 +17,8 @@ import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getStatus, userLogin } from '../../reducers/userReducer'
-import { validateEmail, validatePassword } from './inputValidator'
+import { getStatus, userLogin } from '../../../reducers/userReducer'
+import { validateEmail, validatePassword } from '../inputValidator'
 
 interface Props {
 	onClose: () => void
@@ -41,18 +46,24 @@ const LoginForm = ({ onClose }: Props) => {
 	useEffect(() => {
 		if (status === 'finished') onClose()
 		else if (status === 'login error') {
-			setEmailError('Invalid email or password!')
-			setPasswordError('Invalid email or password!')
+			setPassword('')
 		}
 	}, [onClose, status])
 
 	return (
 		<>
+			{status === 'login error' && (
+				<Alert status="error" mb={4}>
+					<AlertIcon />
+					Invalid email or password
+				</Alert>
+			)}
 			<FormControl isInvalid={emailIsInvalid}>
 				<FormLabel>Email</FormLabel>
 				<Input
 					placeholder="Email"
 					type="email"
+					value={email}
 					onChange={(e) => {
 						setEmail(e.target.value)
 					}}
@@ -65,6 +76,7 @@ const LoginForm = ({ onClose }: Props) => {
 				<InputGroup>
 					<Input
 						placeholder="Password"
+						value={password}
 						type={showPassword ? 'text' : 'password'}
 						onChange={(e) => {
 							setPassword(e.target.value)
@@ -85,7 +97,6 @@ const LoginForm = ({ onClose }: Props) => {
 				</InputGroup>
 				<FormErrorMessage>{passwordError}</FormErrorMessage>
 			</FormControl>
-
 			<Button
 				type="submit"
 				bg="pink.400"
@@ -100,7 +111,7 @@ const LoginForm = ({ onClose }: Props) => {
 				onClick={onSubmit}
 				isDisabled={!email || !password}
 			>
-				Sign in
+				Sign In
 			</Button>
 		</>
 	)

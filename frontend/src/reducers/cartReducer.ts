@@ -66,6 +66,9 @@ const cartReducer = createSlice({
 				} else state.error = new Error('No such item in the cart!')
 			} else state.error = new Error('Cart is empty!')
 		},
+		clearCart(state) {
+			state.items = undefined
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -114,7 +117,7 @@ export const getCartItemQuantity =
 			state.cart.items.find((item) => item._id === id)?.quantity) ||
 		0
 
-export const { addCartItem, removeCartItem, setCartItemQuantity } =
+export const { addCartItem, removeCartItem, setCartItemQuantity, clearCart } =
 	cartReducer.actions
 
 export default cartReducer.reducer

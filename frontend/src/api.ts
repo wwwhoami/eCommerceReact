@@ -30,11 +30,13 @@ export const createAxiosResponseInterceptor = () => {
 				originalRequest.url !== '/api/user/login'
 			) {
 				originalRequest._retry = true
+
 				const res = await axios.get(`/api/refresh-token`)
 				if (res.status === 200) {
 					store.dispatch(setAccessToken(res.data))
 
 					setAccessTokenHeader(res.data.accessToken)
+
 					return axios(originalRequest)
 				}
 			}

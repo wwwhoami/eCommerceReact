@@ -4,11 +4,11 @@ import { useDispatch } from 'react-redux'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { createAxiosResponseInterceptor, getCsrfToken } from './api'
 import Header from './components/nav/HeaderNav'
-import LoginForm from './components/user/LoginForm'
 import Footer from './components/util/Footer'
 import CartPage from './pages/CartPage'
 import HomePage from './pages/HomePage'
 import ProductPage from './pages/ProductPage'
+import UserPage from './pages/UserPage'
 import { fetchUserData } from './reducers/userReducer'
 
 function App() {
@@ -35,7 +35,7 @@ function App() {
 					<Route path="/" component={HomePage} exact />
 					<Route path="/product/:id" component={ProductPage} />
 					<Route path="/cart" component={CartPage} />
-					<Route path="/user" component={LoginForm} />
+					<Route path="/user" component={UserPage} />
 				</Box>
 			</Center>
 			<Footer />

@@ -42,8 +42,8 @@ const SignUpModal = (props: Props) => {
 					<ModalBody pb={6}>
 						<Tabs isFitted variant="solid-rounded" colorScheme="pink">
 							<TabList mb="1em">
-								<Tab>Sign in</Tab>
-								<Tab>Sign up</Tab>
+								<Tab>Sign In</Tab>
+								<Tab>Sign Up</Tab>
 								<ModalCloseButton ml={3} />
 							</TabList>
 							<TabPanels>

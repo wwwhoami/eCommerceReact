@@ -64,9 +64,7 @@ const CartSummary = ({ totalItemQty, totalCost }: Props) => {
 			<Button
 				as={ReactRouterLink}
 				to="/checkout"
-				_hover={{
-					textDecor: 'none',
-				}}
+				variant="solid"
 				w={{ base: '40%', md: 'auto' }}
 				leftIcon={<FontAwesomeIcon icon={faCartArrowDown} />}
 			>

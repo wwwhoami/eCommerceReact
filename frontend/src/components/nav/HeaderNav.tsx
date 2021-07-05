@@ -22,8 +22,8 @@ import { useSelector } from 'react-redux'
 import { Link as ReactRouterLink } from 'react-router-dom'
 import { getCartItemsCount } from '../../reducers/cartReducer'
 import { userIsLoggedIn } from '../../reducers/userReducer'
-import SignoutButton from '../user/SignOutButton'
-import SignUpModal from '../user/SignUpModal'
+import SignUpModal from '../user/signUp/SignUpModal'
+import UserControls from '../user/UserControls'
 import DesktopNav from './DesktopNav'
 import MobileNav from './MobileNav'
 import { NavItems } from './NavItem'
@@ -106,8 +106,7 @@ const Header = () => {
 							isRound
 							size="md"
 							aria-label="To Shopping Cart"
-							variant="ghost"
-							bg="white"
+							variant="solid"
 							icon={
 								<>
 									<FontAwesomeIcon icon={faShoppingBasket} />
@@ -134,7 +133,7 @@ const Header = () => {
 						/>
 					</Tooltip>
 
-					{isAuthenticated ? <SignoutButton /> : <SignUpModal />}
+					{isAuthenticated ? <UserControls /> : <SignUpModal />}
 				</Stack>
 			</Flex>
 

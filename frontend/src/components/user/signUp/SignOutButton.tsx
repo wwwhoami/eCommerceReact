@@ -1,8 +1,7 @@
 import { Button } from '@chakra-ui/react'
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { userLogout } from '../../reducers/userReducer'
-
+import { userLogout } from '../../../reducers/userReducer'
 interface Props {}
 
 const SignoutButton = (props: Props) => {

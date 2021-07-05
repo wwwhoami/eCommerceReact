@@ -8,6 +8,12 @@ const initialState: UserState = {
 	// user: userInfoFromStorage && JSON.parse(userInfoFromStorage),
 }
 
+export const refreshToken = createAsyncThunk('user/refreshToken', async () => {
+	const res = await axios.get<AccessToken>(`/api/refresh-token`)
+
+	if (res.status === 200) return res.data
+})
+
 export const userLogin = createAsyncThunk(
 	'user/userLogin',
 	async (userData: { email: string; password: string }) => {
@@ -50,6 +56,22 @@ export const fetchUserData = createAsyncThunk(
 	}
 )
 
+export const updateUserData = createAsyncThunk(
+	'user/updateUserData',
+	async (userData: {
+		username?: string
+		email?: string
+		password?: string
+	}) => {
+		try {
+			const res = await axios.put<User>('/api/user/profile', userData)
+			if (res.status === 200) return res.data
+		} catch (error) {
+			throw new Error(error.response.data.message)
+		}
+	}
+)
+
 const userReducer = createSlice({
 	name: 'user',
 	initialState,
@@ -60,6 +82,20 @@ const userReducer = createSlice({
 	},
 	extraReducers: (builder) => {
 		builder
+			.addCase(refreshToken.pending, (state) => {
+				state.status = 'loading'
+				state.error = undefined
+			})
+			.addCase(refreshToken.fulfilled, (state, action) => {
+				state.status = 'finished'
+				state.userData = action.payload
+				state.error = undefined
+			})
+			.addCase(refreshToken.rejected, (state, action) => {
+				state.status = 'login error'
+				state.error = action.error
+			})
+
 			.addCase(userLogin.pending, (state) => {
 				state.status = 'loading'
 				state.error = undefined
@@ -115,6 +151,20 @@ const userReducer = createSlice({
 				state.status = 'error'
 				state.error = action.error
 			})
+
+			.addCase(updateUserData.pending, (state) => {
+				state.status = 'loading'
+				state.error = undefined
+			})
+			.addCase(updateUserData.fulfilled, (state, action) => {
+				state.status = 'updated'
+				state.userData = action.payload
+				state.error = undefined
+			})
+			.addCase(updateUserData.rejected, (state, action) => {
+				state.status = 'error'
+				state.error = action.error
+			})
 	},
 })
 
@@ -124,7 +174,8 @@ export const getStatus = (state: RootState) => state.user.status
 
 export const getErrorMessage = (state: RootState) => state.user.error?.message
 
-export const getAccessToken = (state: RootState) => state.user.userData?.accessToken
+export const getAccessToken = (state: RootState) =>
+	state.user.userData?.accessToken
 
 export const accessTokenExpired = (state: RootState) =>
 	!!state?.user?.userData?.accessTokenExpiry &&
