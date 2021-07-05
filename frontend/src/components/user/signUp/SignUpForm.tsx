@@ -163,7 +163,7 @@ const SignUpForm = ({ onClose }: Props) => {
 				}}
 				mr={3}
 				mt={4}
-				isLoading={status === 'loading'}
+				isLoading={status === 'pending'}
 				onClick={onSubmit}
 				isDisabled={!username && !email && !password && !passwordConfirm}
 			>

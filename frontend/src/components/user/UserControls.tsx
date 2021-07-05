@@ -4,22 +4,26 @@ import {
 	MenuButton,
 	MenuItem,
 	MenuList,
+	useDisclosure
 } from '@chakra-ui/react'
 import {
+	faList,
 	faSignOutAlt,
-	faUser,
-	faUserCog,
+	faUser, faUserEdit
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Link as ReactRouterLink } from 'react-router-dom'
 import { userLogout } from '../../reducers/userReducer'
+import UpdateFormModal from './UpdateFormModal'
 
 interface Props {}
 
 const UserControls = (props: Props) => {
 	const dispatch = useDispatch()
+
+	const { isOpen, onOpen, onClose } = useDisclosure()
 
 	const onSignOut = () => {
 		dispatch(userLogout())
@@ -37,10 +41,17 @@ const UserControls = (props: Props) => {
 			<MenuList>
 				<MenuItem
 					as={ReactRouterLink}
-					to="/user"
-					icon={<FontAwesomeIcon width={3} height={3} icon={faUserCog} />}
+					to="/user/order-history"
+					icon={<FontAwesomeIcon width={3} height={3} icon={faList} />}
 				>
-					User Data
+					My Orders
+				</MenuItem>
+				<MenuItem
+					onClick={onOpen}
+					icon={<FontAwesomeIcon width={3} height={3} icon={faUserEdit} />}
+				>
+					Edit Profile
+					<UpdateFormModal isOpen={isOpen} onClose={onClose} />
 				</MenuItem>
 				<MenuItem
 					onClick={onSignOut}

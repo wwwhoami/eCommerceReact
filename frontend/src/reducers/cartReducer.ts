@@ -73,7 +73,7 @@ const cartReducer = createSlice({
 	extraReducers: (builder) => {
 		builder
 			.addCase(addToCart.pending, (state) => {
-				state.status = 'loading'
+				state.status = 'pending'
 
 				state.error = undefined
 			})

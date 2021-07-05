@@ -20,7 +20,7 @@ const HomePage = () => {
 	return (
 		<>
 			<PageHeader hasBackButton={false}>Latest Products</PageHeader>
-			{status === 'loading' ? (
+			{status === 'pending' ? (
 				<SimpleGrid
 					alignItems="center"
 					columns={[1, null, 2, 3, 4]}

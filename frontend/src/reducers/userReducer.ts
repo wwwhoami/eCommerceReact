@@ -1,3 +1,4 @@
+import { userStatus } from './../types'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { AccessToken, RootState, User, UserState } from '../types'
@@ -79,11 +80,14 @@ const userReducer = createSlice({
 		setAccessToken: (state, action: PayloadAction<AccessToken>) => {
 			state.userData = { ...state.userData, ...action.payload }
 		},
+		setStatus: (state, action: PayloadAction<userStatus>) => {
+			state.status = action.payload
+		},
 	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(refreshToken.pending, (state) => {
-				state.status = 'loading'
+				state.status = 'pending'
 				state.error = undefined
 			})
 			.addCase(refreshToken.fulfilled, (state, action) => {
@@ -97,7 +101,7 @@ const userReducer = createSlice({
 			})
 
 			.addCase(userLogin.pending, (state) => {
-				state.status = 'loading'
+				state.status = 'pending'
 				state.error = undefined
 			})
 			.addCase(userLogin.fulfilled, (state, action) => {
@@ -112,7 +116,7 @@ const userReducer = createSlice({
 			})
 
 			.addCase(userSignUp.pending, (state) => {
-				state.status = 'loading'
+				state.status = 'pending'
 				state.error = undefined
 			})
 			.addCase(userSignUp.fulfilled, (state, action) => {
@@ -126,7 +130,7 @@ const userReducer = createSlice({
 			})
 
 			.addCase(userLogout.pending, (state) => {
-				state.status = 'loading'
+				state.status = 'pending'
 				state.error = undefined
 			})
 			.addCase(userLogout.fulfilled, (state) => {
@@ -139,7 +143,7 @@ const userReducer = createSlice({
 			})
 
 			.addCase(fetchUserData.pending, (state) => {
-				state.status = 'loading'
+				state.status = 'pending'
 				state.error = undefined
 			})
 			.addCase(fetchUserData.fulfilled, (state, action) => {
@@ -153,7 +157,7 @@ const userReducer = createSlice({
 			})
 
 			.addCase(updateUserData.pending, (state) => {
-				state.status = 'loading'
+				state.status = 'pending'
 				state.error = undefined
 			})
 			.addCase(updateUserData.fulfilled, (state, action) => {
@@ -183,6 +187,6 @@ export const accessTokenExpired = (state: RootState) =>
 
 export const userIsLoggedIn = (state: RootState) => !!state?.user?.userData
 
-export const { setAccessToken } = userReducer.actions
+export const { setAccessToken, setStatus } = userReducer.actions
 
 export default userReducer.reducer

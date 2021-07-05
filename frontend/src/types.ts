@@ -33,7 +33,7 @@ export type User = {
 } & AccessToken
 
 type StateTemplate = {
-	status?: 'loading' | 'finished' | 'error'
+	status?: 'pending' | 'finished' | 'error'
 	error?: SerializedError
 }
 
@@ -47,7 +47,7 @@ export type ProductDetailsState = StateTemplate & {
 
 export type UserState = Omit<StateTemplate, 'status'> & {
 	status?:
-		| 'loading'
+		| 'pending'
 		| 'finished'
 		| 'error'
 		| 'created'
@@ -55,6 +55,8 @@ export type UserState = Omit<StateTemplate, 'status'> & {
 		| 'updated'
 	userData?: User
 }
+
+export type userStatus = UserState['status']
 
 export type CartState = StateTemplate & {
 	items?: CartItem[]

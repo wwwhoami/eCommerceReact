@@ -1,4 +1,3 @@
-import { Box } from '@chakra-ui/react'
 import UpdateForm from '../components/user/UpdateForm'
 import PageHeader from '../components/util/PageHeader'
 
@@ -9,9 +8,7 @@ const UserPage = (props: Props) => {
 		<>
 			<PageHeader>User page</PageHeader>
 
-			<Box>
-				<UpdateForm />
-			</Box>
+			<UpdateForm />
 		</>
 	)
 }

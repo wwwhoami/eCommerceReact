@@ -107,7 +107,7 @@ const LoginForm = ({ onClose }: Props) => {
 				}}
 				mr={3}
 				mt={4}
-				isLoading={status === 'loading'}
+				isLoading={status === 'pending'}
 				onClick={onSubmit}
 				isDisabled={!email || !password}
 			>

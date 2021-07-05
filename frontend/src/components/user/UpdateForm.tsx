@@ -1,4 +1,5 @@
 import {
+	Box,
 	Button,
 	FormControl,
 	FormErrorMessage,
@@ -7,9 +8,7 @@ import {
 	Input,
 	InputGroup,
 	InputRightElement,
-	Skeleton,
 	useToast,
-	Text,
 } from '@chakra-ui/react'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -19,6 +18,7 @@ import {
 	getErrorMessage,
 	getStatus,
 	getUserData,
+	setStatus,
 	updateUserData,
 } from '../../reducers/userReducer'
 import {
@@ -27,16 +27,18 @@ import {
 	validateUsername,
 } from './inputValidator'
 
-interface Props {}
+interface Props {
+	onClose?: () => void
+}
 
-const UpdateForm = (props: Props) => {
+const UpdateForm = ({ onClose }: Props) => {
 	const dispatch = useDispatch()
 
 	const status = useSelector(getStatus)
 	const signUpErrorMessage = useSelector(getErrorMessage)
 	const userData = useSelector(getUserData)
 
-	const [newUsername, setNewUsername] = useState(userData?.username || 'lol')
+	const [newUsername, setNewUsername] = useState(userData?.username || '')
 	const [newUsernameError, setNewUsernameError] = useState('')
 	let newUsernameIsInvalid = !!newUsernameError
 
@@ -78,8 +80,10 @@ const UpdateForm = (props: Props) => {
 				duration: 3000,
 				isClosable: true,
 			})
+			dispatch(setStatus('finished'))
+			onClose && onClose()
 		}
-	}, [status, toast])
+	}, [dispatch, onClose, status, toast])
 
 	useEffect(() => {
 		if (userData) {
@@ -104,84 +108,73 @@ const UpdateForm = (props: Props) => {
 	}, [newPassword, newPasswordConfirm])
 
 	return (
-		<>
-			<Text fontSize="3xl" fontWeight={500} mb={4}>
-				Update user data
-			</Text>
-			<Skeleton isLoaded={status !== 'loading'}>
-				<FormControl isInvalid={newUsernameIsInvalid}>
-					<FormLabel>New username</FormLabel>
-					<Input
-						placeholder="Username"
-						type="text"
-						value={newUsername}
-						onChange={(e) => {
-							setNewUsername(e.target.value)
-						}}
-						onBlur={() => setNewUsernameError(validateUsername(newUsername))}
-					/>
-					<FormErrorMessage>{newUsernameError}</FormErrorMessage>
-				</FormControl>
-			</Skeleton>
-			<Skeleton isLoaded={status !== 'loading'}>
-				<FormControl isInvalid={newEmailIsInvalid} mt={4}>
-					<FormLabel>New email</FormLabel>
-					<Input
-						placeholder="Email"
-						type="email"
-						value={newEmail}
-						onChange={(e) => {
-							setNewEmail(e.target.value)
-						}}
-						onBlur={() => setNewEmailError(validateEmail(newEmail))}
-					/>
-					<FormErrorMessage>{newEmailError}</FormErrorMessage>
-				</FormControl>
-			</Skeleton>
-			<Skeleton isLoaded={status !== 'loading'}>
-				<FormControl mt={4}>
-					<FormLabel>New password</FormLabel>
+		<Box>
+			<FormControl isInvalid={newUsernameIsInvalid}>
+				<FormLabel>New username</FormLabel>
+				<Input
+					placeholder="Username"
+					type="text"
+					value={newUsername}
+					onChange={(e) => {
+						setNewUsername(e.target.value)
+					}}
+					onBlur={() => setNewUsernameError(validateUsername(newUsername))}
+				/>
+				<FormErrorMessage>{newUsernameError}</FormErrorMessage>
+			</FormControl>
+			<FormControl isInvalid={newEmailIsInvalid} mt={4}>
+				<FormLabel>New email</FormLabel>
+				<Input
+					placeholder="Email"
+					type="email"
+					value={newEmail}
+					onChange={(e) => {
+						setNewEmail(e.target.value)
+					}}
+					onBlur={() => setNewEmailError(validateEmail(newEmail))}
+				/>
+				<FormErrorMessage>{newEmailError}</FormErrorMessage>
+			</FormControl>
+			<FormControl mt={4}>
+				<FormLabel>New password</FormLabel>
 
-					<InputGroup>
-						<Input
-							placeholder="Password"
-							type={showPassword ? 'text' : 'password'}
-							onChange={(e) => {
-								setNewPassword(e.target.value)
-							}}
-						/>
-						<InputRightElement>
-							<IconButton
-								aria-label="Show password"
-								size="sm"
-								onClick={() => setShowPassword(!showPassword)}
-								rounded="full"
-								icon={
-									<FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
-								}
-							></IconButton>
-						</InputRightElement>
-					</InputGroup>
-				</FormControl>
-			</Skeleton>
-			<Skeleton isLoaded={status !== 'loading'}>
-				<FormControl isInvalid={newPasswordConfirmIsInvalid} mt={4}>
-					<FormLabel>New password confirmation</FormLabel>
+				<InputGroup>
 					<Input
 						placeholder="Password"
 						type={showPassword ? 'text' : 'password'}
 						onChange={(e) => {
-							setNewPasswordConfirm(e.target.value)
+							setNewPassword(e.target.value)
 						}}
-						onBlur={() =>
-							setNewPasswordConfirmError(
-								validatePasswordConfirmNotReq(newPassword, newPasswordConfirm)
-							)
-						}
 					/>
-					<FormErrorMessage>{newPasswordConfirmError}</FormErrorMessage>
-				</FormControl>
-			</Skeleton>
+					<InputRightElement>
+						<IconButton
+							aria-label="Show password"
+							size="sm"
+							onClick={() => setShowPassword(!showPassword)}
+							rounded="full"
+							icon={
+								<FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+							}
+						></IconButton>
+					</InputRightElement>
+				</InputGroup>
+			</FormControl>
+			<FormControl isInvalid={newPasswordConfirmIsInvalid} mt={4}>
+				<FormLabel>New password confirmation</FormLabel>
+				<Input
+					placeholder="Password"
+					type={showPassword ? 'text' : 'password'}
+					onChange={(e) => {
+						setNewPasswordConfirm(e.target.value)
+					}}
+					onBlur={() =>
+						setNewPasswordConfirmError(
+							validatePasswordConfirmNotReq(newPassword, newPasswordConfirm)
+						)
+					}
+				/>
+				<FormErrorMessage>{newPasswordConfirmError}</FormErrorMessage>
+			</FormControl>
 			<Button
 				type="submit"
 				bg="pink.400"
@@ -192,7 +185,7 @@ const UpdateForm = (props: Props) => {
 				}}
 				mr={3}
 				mt={4}
-				isLoading={status === 'loading'}
+				isLoading={status === 'pending'}
 				onClick={onSubmit}
 				isDisabled={
 					userData?.username === newUsername &&
@@ -202,7 +195,7 @@ const UpdateForm = (props: Props) => {
 			>
 				Update
 			</Button>
-		</>
+		</Box>
 	)
 }
 
