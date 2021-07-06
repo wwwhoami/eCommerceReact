@@ -20,12 +20,12 @@ import {
 	getUserData,
 	setStatus,
 	updateUserData,
-} from '../../reducers/userReducer'
+} from '../../../reducers/userReducer'
 import {
 	validateEmail,
 	validatePasswordConfirmNotReq,
 	validateUsername,
-} from './inputValidator'
+} from '../inputValidator'
 
 interface Props {
 	onClose?: () => void

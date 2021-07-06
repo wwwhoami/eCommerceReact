@@ -1,7 +1,10 @@
 import {
-    Modal, ModalBody,
-    ModalCloseButton, ModalContent,
-    ModalHeader, ModalOverlay
+	Modal,
+	ModalBody,
+	ModalCloseButton,
+	ModalContent,
+	ModalHeader,
+	ModalOverlay,
 } from '@chakra-ui/react'
 import UpdateForm from './UpdateForm'
 

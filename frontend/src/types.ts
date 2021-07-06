@@ -23,6 +23,15 @@ export type CartItemQty = {
 	quantity: number
 }
 
+export type ShippingAddress = {
+	email: string
+	country: string
+	state: string
+	streetAddress: string
+	city: string
+	postalCode: string
+}
+
 export type AccessToken = { accessToken: string; accessTokenExpiry: number }
 
 export type User = {
@@ -60,6 +69,7 @@ export type userStatus = UserState['status']
 
 export type CartState = StateTemplate & {
 	items?: CartItem[]
+	shippingAddress?: ShippingAddress
 }
 
 export type RootState = ReturnType<typeof store.getState>

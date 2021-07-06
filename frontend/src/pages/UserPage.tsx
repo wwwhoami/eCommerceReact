@@ -1,4 +1,4 @@
-import UpdateForm from '../components/user/UpdateForm'
+import UpdateForm from '../components/user/updateProfile/UpdateForm'
 import PageHeader from '../components/util/PageHeader'
 
 interface Props {}

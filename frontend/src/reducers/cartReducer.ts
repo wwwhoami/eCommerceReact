@@ -1,6 +1,13 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import axios from 'axios'
-import { CartItem, CartItemQty, CartState, IProduct, RootState } from '../types'
+import {
+	CartItem,
+	CartItemQty,
+	CartState,
+	IProduct,
+	RootState,
+	ShippingAddress,
+} from '../types'
 
 const cartItemsFromStorage = localStorage.getItem('cartItems')
 
@@ -69,6 +76,9 @@ const cartReducer = createSlice({
 		clearCart(state) {
 			state.items = undefined
 		},
+		saveShippingAddress(state, action: PayloadAction<ShippingAddress>) {
+			state.shippingAddress = action.payload
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -117,7 +127,15 @@ export const getCartItemQuantity =
 			state.cart.items.find((item) => item._id === id)?.quantity) ||
 		0
 
-export const { addCartItem, removeCartItem, setCartItemQuantity, clearCart } =
-	cartReducer.actions
+export const getShippingAddress = (state: RootState) =>
+	state.cart.shippingAddress
+
+export const {
+	addCartItem,
+	removeCartItem,
+	setCartItemQuantity,
+	clearCart,
+	saveShippingAddress,
+} = cartReducer.actions
 
 export default cartReducer.reducer

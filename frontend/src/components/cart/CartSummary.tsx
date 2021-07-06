@@ -1,15 +1,15 @@
 import {
+	Button,
+	HStack,
 	Stack,
 	StackDivider,
-	HStack,
-	Button,
-	useBreakpointValue,
 	Text,
+	useBreakpointValue,
 } from '@chakra-ui/react'
-import { faCartArrowDown } from '@fortawesome/free-solid-svg-icons'
+import { faShippingFast } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Link as ReactRouterLink } from 'react-router-dom'
 import React from 'react'
+import { Link as ReactRouterLink } from 'react-router-dom'
 
 interface Props {
 	totalItemQty: number
@@ -66,9 +66,9 @@ const CartSummary = ({ totalItemQty, totalCost }: Props) => {
 				to="/checkout"
 				variant="solid"
 				w={{ base: '40%', md: 'auto' }}
-				leftIcon={<FontAwesomeIcon icon={faCartArrowDown} />}
+				rightIcon={<FontAwesomeIcon icon={faShippingFast} />}
 			>
-				To checkout
+				To Checkout
 			</Button>
 		</Stack>
 	)

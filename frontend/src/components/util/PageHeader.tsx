@@ -1,4 +1,4 @@
-import { HStack, chakra } from '@chakra-ui/react'
+import { Heading, HStack } from '@chakra-ui/react'
 import React, { PropsWithChildren } from 'react'
 import BackButton from './BackButton'
 
@@ -13,9 +13,9 @@ const PageHeader = ({
 	return (
 		<HStack spacing={20} my={4}>
 			{hasBackButton && <BackButton />}
-			<chakra.h1 fontSize="4xl" fontWeight={600}>
+			<Heading as="h1" fontSize="4xl" fontWeight={600}>
 				{children}
-			</chakra.h1>
+			</Heading>
 		</HStack>
 	)
 }

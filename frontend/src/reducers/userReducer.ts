@@ -176,6 +176,8 @@ export const getUserData = (state: RootState) => state.user.userData
 
 export const getStatus = (state: RootState) => state.user.status
 
+export const getUserEmail = (state: RootState) => state.user.userData?.email
+
 export const getErrorMessage = (state: RootState) => state.user.error?.message
 
 export const getAccessToken = (state: RootState) =>

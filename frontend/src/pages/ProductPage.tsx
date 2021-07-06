@@ -2,14 +2,12 @@ import {
 	Button,
 	Center,
 	chakra,
-	Grid,
 	HStack,
 	IconButton,
 	Image,
 	Input,
 	Skeleton,
 	Stack,
-	StackDivider,
 	Text,
 	useToast,
 } from '@chakra-ui/react'
@@ -22,13 +20,13 @@ import Message from '../components/util/Message'
 import PageHeader from '../components/util/PageHeader'
 import Rating from '../components/util/Rating'
 import {
+	addToCart,
 	getCartItemQuantity,
 	itemCanBeAddedToCart,
-	addToCart,
 } from '../reducers/cartReducer'
 import {
-	getProductDetailsState,
 	fetchProductById,
+	getProductDetailsState,
 } from '../reducers/productDetailsReducer'
 interface Params {
 	id: string

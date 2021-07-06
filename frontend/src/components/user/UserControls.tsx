@@ -4,19 +4,20 @@ import {
 	MenuButton,
 	MenuItem,
 	MenuList,
-	useDisclosure
+	useDisclosure,
 } from '@chakra-ui/react'
 import {
 	faList,
 	faSignOutAlt,
-	faUser, faUserEdit
+	faUser,
+	faUserEdit,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Link as ReactRouterLink } from 'react-router-dom'
 import { userLogout } from '../../reducers/userReducer'
-import UpdateFormModal from './UpdateFormModal'
+import UpdateFormModal from './updateProfile/UpdateFormModal'
 
 interface Props {}
 

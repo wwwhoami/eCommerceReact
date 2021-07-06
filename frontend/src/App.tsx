@@ -6,6 +6,7 @@ import { createAxiosResponseInterceptor, getCsrfToken } from './api'
 import Header from './components/nav/HeaderNav'
 import Footer from './components/util/Footer'
 import CartPage from './pages/CartPage'
+import CheckoutPage from './pages/CheckoutPage'
 import HomePage from './pages/HomePage'
 import ProductPage from './pages/ProductPage'
 import UserPage from './pages/UserPage'
@@ -35,8 +36,8 @@ function App() {
 					<Route path="/" component={HomePage} exact />
 					<Route path="/product/:id" component={ProductPage} />
 					<Route path="/cart" component={CartPage} />
-					<Route path="/user/" component={UserPage} />
 					<Route path="/user/order-history" component={UserPage} />
+					<Route path="/checkout" component={CheckoutPage} />
 				</Box>
 			</Center>
 			<Footer />
