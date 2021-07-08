@@ -10,11 +10,12 @@ import CartListItem from './CartListItem'
 interface Props {
 	cartItems: CartItem[]
 }
+//
 
 function CartList({ cartItems }: Props): ReactElement {
 	const dispatch = useDispatch()
 	return (
-		<VStack spacing={{ base: 4, md: 6, lg: 7 }} my={{ base: 10, lg: 0 }}>
+		<VStack spacing={{ base: 4, md: 6, lg: 7 }} my={{ base: 6, lg: 0 }}>
 			<Button
 				colorScheme="red"
 				w="100%"

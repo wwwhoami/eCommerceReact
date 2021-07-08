@@ -21,13 +21,18 @@ import Stepper from '../stepper/Stepper'
 
 interface Props {}
 
-const CheckoutForm = (props: Props) => {
+const ShippingForm = (props: Props) => {
 	const dispatch = useDispatch()
 
 	const userEmail = useSelector(getUserEmail)
 	const shippingAddress = useSelector(getShippingAddress)
 
-	const { setActiveDisplay, setAvailableDisplays } = useContext(Stepper)
+	const {
+		setActiveDisplay,
+		setAvailableDisplays,
+		activeDisplay,
+		availableDisplays,
+	} = useContext(Stepper)
 
 	const [email, setEmail] = useState('')
 	const [country, setCountry] = useState('')
@@ -47,7 +52,8 @@ const CheckoutForm = (props: Props) => {
 				postalCode,
 			})
 		)
-		setAvailableDisplays((prev) => prev + 1)
+		const isLastStep = activeDisplay === availableDisplays
+		isLastStep && setAvailableDisplays((prev) => prev + 1)
 		setActiveDisplay((prev) => prev + 1)
 	}
 
@@ -69,14 +75,7 @@ const CheckoutForm = (props: Props) => {
 	}, [shippingAddress])
 
 	return (
-		<GridItem
-			mt={[5, null, 0]}
-			colSpan={{ md: 2 }}
-			borderWidth="1px"
-			rounded="lg"
-			shadow="lg"
-			bgColor="gray.50"
-		>
+		<>
 			<Stack
 				px={4}
 				py={5}
@@ -101,7 +100,6 @@ const CheckoutForm = (props: Props) => {
 							onChange={(e) => setEmail(e.target.value)}
 						/>
 					</FormControl>
-
 					<FormControl as={GridItem} colSpan={[6, 3]} isRequired>
 						<FormLabel for="country">Country / Region</FormLabel>
 						<Select
@@ -121,7 +119,6 @@ const CheckoutForm = (props: Props) => {
 							<option>Mexico</option>
 						</Select>
 					</FormControl>
-
 					<FormControl as={GridItem} colSpan={6} isRequired>
 						<FormLabel for="streetAddress">Street address</FormLabel>
 						<Input
@@ -137,7 +134,6 @@ const CheckoutForm = (props: Props) => {
 							onChange={(e) => setStreetAddress(e.target.value)}
 						/>
 					</FormControl>
-
 					<FormControl as={GridItem} colSpan={[6, 6, null, 2]} isRequired>
 						<FormLabel for="city">City</FormLabel>
 						<Input
@@ -153,7 +149,6 @@ const CheckoutForm = (props: Props) => {
 							onChange={(e) => setCity(e.target.value)}
 						/>
 					</FormControl>
-
 					<FormControl as={GridItem} colSpan={[6, 3, null, 2]} isRequired>
 						<FormLabel for="state">State / Province</FormLabel>
 						<Input
@@ -169,7 +164,6 @@ const CheckoutForm = (props: Props) => {
 							onChange={(e) => setState(e.target.value)}
 						/>
 					</FormControl>
-
 					<FormControl as={GridItem} colSpan={[6, 3, null, 2]} isRequired>
 						<FormLabel for="postalCode">ZIP / Postal</FormLabel>
 						<Input
@@ -205,8 +199,8 @@ const CheckoutForm = (props: Props) => {
 					Save
 				</Button>
 			</Box>
-		</GridItem>
+		</>
 	)
 }
 
-export default CheckoutForm
+export default ShippingForm

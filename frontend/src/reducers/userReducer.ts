@@ -1,4 +1,4 @@
-import { userStatus } from './../types'
+import { UserStatus } from './../types'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { AccessToken, RootState, User, UserState } from '../types'
@@ -80,7 +80,7 @@ const userReducer = createSlice({
 		setAccessToken: (state, action: PayloadAction<AccessToken>) => {
 			state.userData = { ...state.userData, ...action.payload }
 		},
-		setStatus: (state, action: PayloadAction<userStatus>) => {
+		setStatus: (state, action: PayloadAction<UserStatus>) => {
 			state.status = action.payload
 		},
 	},

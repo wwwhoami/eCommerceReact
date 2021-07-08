@@ -1,12 +1,13 @@
 import { Box, GridItem, SimpleGrid } from '@chakra-ui/react'
 import React from 'react'
-import CheckoutForm from '../components/checkout/CheckoutForm'
+import CheckoutSummary from '../components/checkout/CheckoutSummary'
+import PaymentForm from '../components/checkout/PaymentForm'
+import ShippingForm from '../components/checkout/ShippingForm'
 import StepperBody from '../components/stepper/StebberBody'
 import { Stepper } from '../components/stepper/Stepper'
 import StepperHeader from '../components/stepper/StepperHeader'
 import StepperHeaderItem from '../components/stepper/StepperHeaderItem'
 import PageHeader from '../components/util/PageHeader'
-import UserPage from './UserPage'
 
 interface Props {}
 
@@ -27,15 +28,29 @@ const CheckoutPage = (props: Props) => {
 								<StepperHeaderItem heading="Personal Information">
 									Use a permanent address where you can receive mail.
 								</StepperHeaderItem>
-								<StepperHeaderItem heading="Second Information">
-									Lorem ipsum dolor sit amet consectetur adipisicing elit.
+								<StepperHeaderItem heading="Payment Method">
+									Select payment method you prefer
+								</StepperHeaderItem>
+								<StepperHeaderItem heading="Place Order">
+									Order Summary
 								</StepperHeaderItem>
 							</StepperHeader>
 						</GridItem>
-						<StepperBody>
-							<CheckoutForm />
-							<UserPage />
-						</StepperBody>
+						<GridItem
+							mt={[5, null, 0]}
+							colSpan={{ md: 2 }}
+							borderWidth="1px"
+							rounded="lg"
+							shadow="lg"
+							bgColor="gray.50"
+							h="fit-content"
+						>
+							<StepperBody>
+								<ShippingForm />
+								<PaymentForm />
+								<CheckoutSummary />
+							</StepperBody>
+						</GridItem>
 					</Stepper>
 				</SimpleGrid>
 			</Box>

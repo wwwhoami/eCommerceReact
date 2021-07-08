@@ -5,6 +5,7 @@ import {
 	CartItemQty,
 	CartState,
 	IProduct,
+	PaymentMethod,
 	RootState,
 	ShippingAddress,
 } from '../types'
@@ -79,6 +80,9 @@ const cartReducer = createSlice({
 		saveShippingAddress(state, action: PayloadAction<ShippingAddress>) {
 			state.shippingAddress = action.payload
 		},
+		savePaymentMethod(state, action: PayloadAction<PaymentMethod>) {
+			state.paymentMethod = action.payload
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -109,6 +113,20 @@ export const getCartItemsCount = (state: RootState) =>
 		  })).quantity
 		: 0
 
+export const getTotalItemQty = (state: RootState) =>
+	state.cart.items
+		? state.cart.items
+				.map((cartItem) => cartItem.quantity)
+				.reduce((itemQtyAccumulator, qty) => itemQtyAccumulator + qty)
+		: 0
+
+export const getTotalCost = (state: RootState) =>
+	state.cart.items
+		? state.cart.items
+				.map((cartItem) => cartItem.quantity * cartItem.price)
+				.reduce((costAccumulator, itemCost) => costAccumulator + itemCost)
+		: 0
+
 export const getCartItemById = (state: RootState) => (id: string | undefined) =>
 	state?.cart?.items && state.cart.items.find((item) => item._id === id)
 
@@ -130,12 +148,15 @@ export const getCartItemQuantity =
 export const getShippingAddress = (state: RootState) =>
 	state.cart.shippingAddress
 
+export const getPaymentMethod = (state: RootState) => state.cart.paymentMethod
+
 export const {
 	addCartItem,
 	removeCartItem,
 	setCartItemQuantity,
 	clearCart,
 	saveShippingAddress,
+	savePaymentMethod,
 } = cartReducer.actions
 
 export default cartReducer.reducer

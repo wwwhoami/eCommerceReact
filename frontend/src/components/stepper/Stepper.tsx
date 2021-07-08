@@ -28,7 +28,7 @@ const Stepper = ({ children }: PropsWithChildren<Props>) => {
 	const [availableDisplays, setAvailableDisplays] = useState(activeDisplay)
 
 	useEffect(() => {
-		if (availableDisplays < activeDisplay) setActiveDisplay(activeDisplay)
+		if (availableDisplays < activeDisplay) setActiveDisplay(availableDisplays)
 	}, [activeDisplay, availableDisplays])
 
 	return (

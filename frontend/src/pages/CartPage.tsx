@@ -6,7 +6,11 @@ import CartList from '../components/cart/CartList'
 import CartSummary from '../components/cart/CartSummary'
 import Message from '../components/util/Message'
 import PageHeader from '../components/util/PageHeader'
-import { getCartItems } from '../reducers/cartReducer'
+import {
+	getCartItems,
+	getTotalCost,
+	getTotalItemQty,
+} from '../reducers/cartReducer'
 
 type Params = {
 	id: string
@@ -18,6 +22,8 @@ const CartPage = ({
 	history,
 }: RouteComponentProps<Params>) => {
 	const cartItems = useSelector(getCartItems)
+	const totalCost = useSelector(getTotalCost)
+	const totalItemQty = useSelector(getTotalItemQty)
 
 	return (
 		<Stack>
@@ -36,15 +42,8 @@ const CartPage = ({
 					>
 						<CartList cartItems={cartItems} />
 						<CartSummary
-							totalItemQty={cartItems
-								.map((cartItem) => cartItem.quantity)
-								.reduce((itemQtyAccumulator, qty) => itemQtyAccumulator + qty)}
-							totalCost={cartItems
-								.map((cartItem) => cartItem.quantity * cartItem.price)
-								.reduce(
-									(costAccumulator, itemCost) => costAccumulator + itemCost
-								)
-								.toFixed(2)}
+							totalItemQty={totalItemQty}
+							totalCost={totalCost.toFixed(2)}
 						/>
 					</Stack>
 				)}

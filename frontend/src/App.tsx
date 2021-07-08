@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { createAxiosResponseInterceptor, getCsrfToken } from './api'
 import Header from './components/nav/HeaderNav'
+import AuthenticatedRoute from './components/util/AuthenticatedRoute'
 import Footer from './components/util/Footer'
 import CartPage from './pages/CartPage'
 import CheckoutPage from './pages/CheckoutPage'
@@ -14,6 +15,7 @@ import { fetchUserData } from './reducers/userReducer'
 
 function App() {
 	const dispatch = useDispatch()
+
 	useEffect(() => {
 		getCsrfToken()
 
@@ -36,8 +38,8 @@ function App() {
 					<Route path="/" component={HomePage} exact />
 					<Route path="/product/:id" component={ProductPage} />
 					<Route path="/cart" component={CartPage} />
-					<Route path="/user/order-history" component={UserPage} />
-					<Route path="/checkout" component={CheckoutPage} />
+					<AuthenticatedRoute path="/user/order-history" component={UserPage} />
+					<AuthenticatedRoute path="/checkout" component={CheckoutPage} />
 				</Box>
 			</Center>
 			<Footer />

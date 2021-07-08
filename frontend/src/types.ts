@@ -32,6 +32,9 @@ export type ShippingAddress = {
 	postalCode: string
 }
 
+export type PaymentMethod =  'PayPal' | 'Stripe'
+
+
 export type AccessToken = { accessToken: string; accessTokenExpiry: number }
 
 export type User = {
@@ -65,11 +68,12 @@ export type UserState = Omit<StateTemplate, 'status'> & {
 	userData?: User
 }
 
-export type userStatus = UserState['status']
+export type UserStatus = UserState['status']
 
 export type CartState = StateTemplate & {
 	items?: CartItem[]
 	shippingAddress?: ShippingAddress
+	paymentMethod?: PaymentMethod
 }
 
 export type RootState = ReturnType<typeof store.getState>
