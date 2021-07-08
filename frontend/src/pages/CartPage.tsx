@@ -8,7 +8,7 @@ import Message from '../components/util/Message'
 import PageHeader from '../components/util/PageHeader'
 import {
 	getCartItems,
-	getTotalCost,
+	getItemsPrice,
 	getTotalItemQty,
 } from '../reducers/cartReducer'
 
@@ -22,7 +22,7 @@ const CartPage = ({
 	history,
 }: RouteComponentProps<Params>) => {
 	const cartItems = useSelector(getCartItems)
-	const totalCost = useSelector(getTotalCost)
+	const totalCost = useSelector(getItemsPrice)
 	const totalItemQty = useSelector(getTotalItemQty)
 
 	return (

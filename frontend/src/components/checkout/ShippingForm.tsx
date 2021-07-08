@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
 	getShippingAddress,
 	saveShippingAddress,
-} from '../../reducers/cartReducer'
+} from '../../reducers/orderReducer'
 import { getUserEmail } from '../../reducers/userReducer'
 import Stepper from '../stepper/Stepper'
 

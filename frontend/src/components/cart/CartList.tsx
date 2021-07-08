@@ -3,7 +3,7 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { ReactElement } from 'react'
 import { useDispatch } from 'react-redux'
-import { clearCart } from '../../reducers/cartReducer'
+import { emptyCart } from '../../reducers/cartReducer'
 import { CartItem } from '../../types'
 import CartListItem from './CartListItem'
 
@@ -20,10 +20,10 @@ function CartList({ cartItems }: Props): ReactElement {
 				colorScheme="red"
 				w="100%"
 				variant="ghost"
-				onClick={() => dispatch(clearCart())}
+				onClick={() => dispatch(emptyCart())}
 				leftIcon={<FontAwesomeIcon icon={faTrash} />}
 			>
-				Clear Cart
+				Empty Cart
 			</Button>
 			{cartItems.map((item) => (
 				<CartListItem key={item._id} item={item} />

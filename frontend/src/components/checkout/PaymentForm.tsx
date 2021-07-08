@@ -11,7 +11,10 @@ import {
 } from '@chakra-ui/react'
 import React, { useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getPaymentMethod, savePaymentMethod } from '../../reducers/cartReducer'
+import {
+	getPaymentMethod,
+	savePaymentMethod,
+} from '../../reducers/orderReducer'
 import { PaymentMethod } from '../../types'
 import Stepper from '../stepper/Stepper'
 

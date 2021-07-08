@@ -10,10 +10,12 @@ export type OrderDocument = mongoose.Document & {
 		product: mongoose.Types.ObjectId
 	}[]
 	shippingAddress: {
-		address: string
-		city: string
-		portalCode: string
+		email: string
 		country: string
+		state: string
+		streetAddress: string
+		city: string
+		postalCode: string
 	}
 	paymentMethod: {
 		id: string
@@ -48,9 +50,11 @@ const orderSchema = new mongoose.Schema(
 			},
 		],
 		shippingAddress: {
-			address: { type: String, required: true },
+			email: { type: String },
+			streetAddress: { type: String, required: true },
+			state: { type: String, required: true },
 			city: { type: String, required: true },
-			portalCode: { type: String, required: true },
+			postalCode: { type: String, required: true },
 			country: { type: String, required: true },
 		},
 		paymentMethod: {
@@ -97,6 +101,6 @@ const orderSchema = new mongoose.Schema(
 	}
 )
 
-const Product = mongoose.model<OrderDocument>('order', orderSchema)
+const Order = mongoose.model<OrderDocument>('order', orderSchema)
 
-export default Product
+export default Order

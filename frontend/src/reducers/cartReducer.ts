@@ -1,14 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import axios from 'axios'
-import {
-	CartItem,
-	CartItemQty,
-	CartState,
-	IProduct,
-	PaymentMethod,
-	RootState,
-	ShippingAddress,
-} from '../types'
+import { CartItem, CartItemQty, CartState, IProduct, RootState } from '../types'
 
 const cartItemsFromStorage = localStorage.getItem('cartItems')
 
@@ -74,14 +66,8 @@ const cartReducer = createSlice({
 				} else state.error = new Error('No such item in the cart!')
 			} else state.error = new Error('Cart is empty!')
 		},
-		clearCart(state) {
+		emptyCart(state) {
 			state.items = undefined
-		},
-		saveShippingAddress(state, action: PayloadAction<ShippingAddress>) {
-			state.shippingAddress = action.payload
-		},
-		savePaymentMethod(state, action: PayloadAction<PaymentMethod>) {
-			state.paymentMethod = action.payload
 		},
 	},
 	extraReducers: (builder) => {
@@ -120,7 +106,7 @@ export const getTotalItemQty = (state: RootState) =>
 				.reduce((itemQtyAccumulator, qty) => itemQtyAccumulator + qty)
 		: 0
 
-export const getTotalCost = (state: RootState) =>
+export const getItemsPrice = (state: RootState) =>
 	state.cart.items
 		? state.cart.items
 				.map((cartItem) => cartItem.quantity * cartItem.price)
@@ -145,18 +131,7 @@ export const getCartItemQuantity =
 			state.cart.items.find((item) => item._id === id)?.quantity) ||
 		0
 
-export const getShippingAddress = (state: RootState) =>
-	state.cart.shippingAddress
-
-export const getPaymentMethod = (state: RootState) => state.cart.paymentMethod
-
-export const {
-	addCartItem,
-	removeCartItem,
-	setCartItemQuantity,
-	clearCart,
-	saveShippingAddress,
-	savePaymentMethod,
-} = cartReducer.actions
+export const { addCartItem, removeCartItem, setCartItemQuantity, emptyCart } =
+	cartReducer.actions
 
 export default cartReducer.reducer

@@ -7,33 +7,82 @@ import {
 	StackDivider,
 	Text,
 } from '@chakra-ui/react'
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import {
-	getPaymentMethod,
-	getShippingAddress,
-	getTotalCost,
+	emptyCart,
+	getCartItems,
+	getItemsPrice,
 	getTotalItemQty,
 } from '../../reducers/cartReducer'
+import {
+	getShippingAddress,
+	getPaymentMethod,
+	createOrder,
+	getOrderStatus,
+	getCreatedOrderId,
+} from '../../reducers/orderReducer'
 import OrderItemsList from './OrderItemsList'
 
 interface Props {}
 
 const CheckoutSummary = (props: Props) => {
+	const dispatch = useDispatch()
+	const status = useSelector(getOrderStatus)
+
 	const shippingAddress = useSelector(getShippingAddress)
 	const { email, country, state, streetAddress, city, postalCode } =
 		shippingAddress!!
+	const orderItems = useSelector(getCartItems)
 	const paymentMethod = useSelector(getPaymentMethod)
 	const totalItemQty = useSelector(getTotalItemQty)
-	const totalCost = useSelector(getTotalCost)
-	const shippingPrice = totalCost > 100 ? 0 : 20
-	const taxPrice = 0.15 * totalCost
+	const itemsPrice = useSelector(getItemsPrice)
+	const shippingPrice = itemsPrice > 100 ? 0 : 20
+	const taxPrice = 0.15 * itemsPrice
+	const totalPrice = itemsPrice + shippingPrice + taxPrice
+
+	const orderId = useSelector(getCreatedOrderId)
+
+	const history = useHistory()
+
+	const onSubmit = () => {
+		if (
+			typeof orderItems !== 'undefined' &&
+			typeof shippingAddress !== 'undefined' &&
+			typeof paymentMethod !== 'undefined' &&
+			typeof itemsPrice !== 'undefined' &&
+			typeof taxPrice !== 'undefined' &&
+			typeof shippingPrice !== 'undefined' &&
+			typeof totalPrice !== 'undefined'
+		) {
+			var orderInfo = dispatch(
+				createOrder({
+					orderItems,
+					shippingAddress,
+					paymentMethod,
+					itemsPrice,
+					taxPrice,
+					shippingPrice,
+					totalPrice,
+				})
+			)
+			console.log(orderInfo)
+		}
+	}
+
+	useEffect(() => {
+		if (status === 'finished' && orderId) {
+			history.push(`/order/${orderId}`)
+			dispatch(emptyCart)
+		}
+	}, [dispatch, history, orderId, status])
 
 	return (
 		<>
-			<Box px={{ base: 4, sm: 6 }} py={3}>
-				<Button type="submit" colorScheme="pink" w="20%">
-					Save
+			<Box px={{ base: 4, sm: 6 }} py={3} position="sticky" top="60px">
+				<Button type="submit" colorScheme="pink" w="20%" onClick={onSubmit}>
+					Order
 				</Button>
 			</Box>
 			<Stack
@@ -90,7 +139,7 @@ const CheckoutSummary = (props: Props) => {
 						<chakra.span fontWeight="semibold">
 							{totalItemQty} item(s):{' '}
 						</chakra.span>
-						${totalCost.toFixed(2)}
+						${itemsPrice.toFixed(2)}
 					</Text>
 					<Text fontSize="xl">
 						<chakra.span fontWeight="semibold">Shipping price: </chakra.span>$
@@ -102,7 +151,7 @@ const CheckoutSummary = (props: Props) => {
 					</Text>
 					<Text fontSize="2xl">
 						<chakra.span fontWeight="semibold">TOTAL: </chakra.span>$
-						{(totalCost + shippingPrice + taxPrice).toFixed(2)}
+						{totalPrice.toFixed(2)}
 					</Text>
 					<OrderItemsList />
 				</Box>
