@@ -46,7 +46,7 @@ export const createAxiosResponseInterceptor = () => {
 	)
 }
 
-export const setAccessTokenHeader = (accessToken: string) => {
+export const setAccessTokenHeader = async (accessToken: string) => {
 	if (accessToken) {
 		axios.defaults.headers.common['Authorization'] = 'Bearer ' + accessToken
 	}

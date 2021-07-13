@@ -1,5 +1,4 @@
 import {
-	Button,
 	Modal,
 	ModalBody,
 	ModalCloseButton,
@@ -10,31 +9,19 @@ import {
 	TabPanel,
 	TabPanels,
 	Tabs,
-	useDisclosure,
 } from '@chakra-ui/react'
 import React from 'react'
 import LoginForm from './LoginForm'
 import SignUpForm from './SignUpForm'
 
-interface Props {}
+interface Props {
+	isOpen: boolean
+	onClose: () => void
+}
 
-const SignUpModal = (props: Props) => {
-	const { isOpen, onOpen, onClose } = useDisclosure()
+const SignUpModal = ({ isOpen, onClose }: Props) => {
 	return (
 		<>
-			<Button
-				fontSize="sm"
-				fontWeight={600}
-				color="white"
-				bg="pink.400"
-				_hover={{
-					bg: 'pink.300',
-					color: 'white',
-				}}
-				onClick={onOpen}
-			>
-				Sign Up
-			</Button>
 			<Modal isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay />
 				<ModalContent>

@@ -1,7 +1,9 @@
+import { useDisclosure } from '@chakra-ui/react'
 import React, { PropsWithChildren } from 'react'
 import { useSelector } from 'react-redux'
-import { Redirect, Route } from 'react-router-dom'
-import { getAccessToken } from '../../reducers/userReducer'
+import { Route, useHistory } from 'react-router-dom'
+import { isLoggedIn } from '../../reducers/userReducer'
+import SignUpModal from '../user/signUp/SignUpModal'
 
 interface Props {
 	component?: React.ComponentType<any>
@@ -13,11 +15,24 @@ const AuthenticatedRoute = ({
 	component,
 	...rest
 }: PropsWithChildren<Props>) => {
-	const isAuthenticated = useSelector(getAccessToken)
-	return isAuthenticated ? (
+	const isLogged = useSelector(isLoggedIn)
+	const { onClose } = useDisclosure()
+	const history = useHistory()
+
+	return isLogged ? (
 		<Route {...rest} component={component} />
 	) : (
-		<Redirect to="/" />
+		<Route
+			render={() => (
+				<SignUpModal
+					isOpen={true}
+					onClose={() => {
+						onClose()
+						history.goBack()
+					}}
+				/>
+			)}
+		/>
 	)
 }
 

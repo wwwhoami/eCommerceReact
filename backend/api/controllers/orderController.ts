@@ -4,7 +4,7 @@ import Order from '../../models/orderModel'
 
 /**
  * @desc   Create new order
- * @route  POST /api/orders/
+ * @route  POST /api/order/
  * @access PRIVATE
  */
 export const createOrder = asyncHandler(async (req, res) => {
@@ -46,4 +46,37 @@ export const createOrder = asyncHandler(async (req, res) => {
 
 		res.status(201).json(createdOrder)
 	}
+})
+
+/**
+ * @desc   Get order by id
+ * @route  GET /api/order/:id
+ * @access PRIVATE
+ */
+export const getOrderById = asyncHandler(async (req, res) => {
+	const { id } = req.params
+	const order = await Order.findById(id)
+
+	if (!order?.user.equals(req.user?._id) && req.user?.isAdmin === false) {
+		res.status(403)
+		throw new Error('Not allowed')
+	} else if (order) {
+		return res.status(200).json(order)
+	}
+	res.status(404)
+	throw new Error('Order not found!')
+})
+
+/**
+ * @desc   Get orders of user
+ * @route  GET /api/order/
+ * @access PRIVATE
+ */
+export const getUserOrders = asyncHandler(async (req, res) => {
+	const orders = await Order.find({ user: req.user?._id })
+	if (orders) {
+		return res.status(200).json(orders)
+	}
+	res.status(404)
+	throw new Error('Orders not found!')
 })

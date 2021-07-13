@@ -9,7 +9,7 @@ import {
 	Skeleton,
 	Stack,
 	Text,
-	useToast,
+	useToast
 } from '@chakra-ui/react'
 import { faCartPlus, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -22,11 +22,11 @@ import Rating from '../components/util/Rating'
 import {
 	addToCart,
 	getCartItemQuantity,
-	itemCanBeAddedToCart,
+	itemCanBeAddedToCart
 } from '../reducers/cartReducer'
 import {
 	fetchProductById,
-	getProductDetailsState,
+	getProductDetailsState
 } from '../reducers/productDetailsReducer'
 interface Params {
 	id: string

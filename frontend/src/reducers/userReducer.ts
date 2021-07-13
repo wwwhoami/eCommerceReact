@@ -187,7 +187,7 @@ export const accessTokenExpired = (state: RootState) =>
 	!!state?.user?.userData?.accessTokenExpiry &&
 	new Date().getTime() / 1000 >= state.user.userData.accessTokenExpiry
 
-export const userIsLoggedIn = (state: RootState) => !!state?.user?.userData
+export const isLoggedIn = (state: RootState) => !!state?.user?.userData
 
 export const { setAccessToken, setStatus } = userReducer.actions
 

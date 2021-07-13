@@ -73,12 +73,28 @@ export type CartState = StateTemplate & {
 	items?: CartItem[]
 }
 
-export type Order = ShippingAddress & CartItem[] & { _id: string; user: string }
+export type Order = {
+	_id: string
+	user: string
+	totalPrice: number
+	createdAt: string
+	shippingAddress: ShippingAddress
+	orderItems: Omit<
+		CartItem,
+		| 'description'
+		| 'brand'
+		| 'category'
+		| 'countInStock'
+		| 'rating'
+		| 'numReviews'
+	>[]
+}
 
 export type OrderState = StateTemplate & {
 	shippingAddress?: ShippingAddress
 	paymentMethod?: PaymentMethod
-	createdOrder?: Order
+	orders?: Order[]
+	lastOrderId?: string
 }
 
 export type RootState = ReturnType<typeof store.getState>

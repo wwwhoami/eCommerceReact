@@ -9,20 +9,20 @@ import {
 	Tooltip,
 	useBreakpointValue,
 	useColorModeValue,
-	useDisclosure,
+	useDisclosure
 } from '@chakra-ui/react'
 import {
 	faBars,
 	faShoppingBasket,
-	faTimes,
+	faTimes
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link as ReactRouterLink } from 'react-router-dom'
 import { getCartItemsCount } from '../../reducers/cartReducer'
-import { userIsLoggedIn } from '../../reducers/userReducer'
-import SignUpModal from '../user/signUp/SignUpModal'
+import { isLoggedIn } from '../../reducers/userReducer'
+import SignUp from '../user/signUp/SignUp'
 import UserControls from '../user/UserControls'
 import DesktopNav from './DesktopNav'
 import MobileNav from './MobileNav'
@@ -30,7 +30,7 @@ import { NavItems } from './NavItem'
 
 const Header = () => {
 	const countInCart = useSelector(getCartItemsCount)
-	const isAuthenticated = useSelector(userIsLoggedIn)
+	const isLogged = useSelector(isLoggedIn)
 	const { isOpen, onToggle } = useDisclosure()
 
 	return (
@@ -133,7 +133,7 @@ const Header = () => {
 						/>
 					</Tooltip>
 
-					{isAuthenticated ? <UserControls /> : <SignUpModal />}
+					{isLogged ? <UserControls /> : <SignUp />}
 				</Stack>
 			</Flex>
 

@@ -6,6 +6,7 @@ import {
 	Stack,
 	StackDivider,
 	Text,
+	useToast,
 } from '@chakra-ui/react'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -46,6 +47,7 @@ const CheckoutSummary = (props: Props) => {
 
 	const history = useHistory()
 
+	const toast = useToast()
 	const onSubmit = () => {
 		if (
 			typeof orderItems !== 'undefined' &&
@@ -56,7 +58,7 @@ const CheckoutSummary = (props: Props) => {
 			typeof shippingPrice !== 'undefined' &&
 			typeof totalPrice !== 'undefined'
 		) {
-			var orderInfo = dispatch(
+			dispatch(
 				createOrder({
 					orderItems,
 					shippingAddress,
@@ -67,16 +69,22 @@ const CheckoutSummary = (props: Props) => {
 					totalPrice,
 				})
 			)
-			console.log(orderInfo)
 		}
 	}
 
 	useEffect(() => {
 		if (status === 'finished' && orderId) {
 			history.push(`/order/${orderId}`)
-			dispatch(emptyCart)
+			dispatch(emptyCart())
+			toast({
+				title: 'Items ordered.',
+				description: "We've created the order for you.",
+				status: 'success',
+				duration: 3000,
+				isClosable: true,
+			})
 		}
-	}, [dispatch, history, orderId, status])
+	}, [dispatch, history, orderId, status, toast])
 
 	return (
 		<>
