@@ -5,12 +5,11 @@ import React, { ReactElement } from 'react'
 import { useDispatch } from 'react-redux'
 import { emptyCart } from '../../reducers/cartReducer'
 import { CartItem } from '../../types'
-import CartListItem from './CartListItem'
+import ProductListItem from '../product/ProductListItem'
 
 interface Props {
 	cartItems: CartItem[]
 }
-//
 
 function CartList({ cartItems }: Props): ReactElement {
 	const dispatch = useDispatch()
@@ -26,7 +25,7 @@ function CartList({ cartItems }: Props): ReactElement {
 				Empty Cart
 			</Button>
 			{cartItems.map((item) => (
-				<CartListItem key={item._id} item={item} />
+				<ProductListItem key={item._id} item={item} />
 			))}
 		</VStack>
 	)

@@ -19,7 +19,6 @@ function App() {
 
 	useEffect(() => {
 		getCsrfToken()
-
 		createAxiosResponseInterceptor()
 		dispatch(fetchUserData())
 	}, [dispatch])

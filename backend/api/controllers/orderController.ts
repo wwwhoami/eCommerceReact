@@ -8,15 +8,7 @@ import Order from '../../models/orderModel'
  * @access PRIVATE
  */
 export const createOrder = asyncHandler(async (req, res) => {
-	const {
-		orderItems,
-		shippingAddress,
-		paymentMethod,
-		itemsPrice,
-		taxPrice,
-		shippingPrice,
-		totalPrice,
-	} = req.body
+	const { orderItems, shippingAddress, payment, price } = req.body
 
 	if (orderItems && orderItems.length === 0) {
 		res.status(400)
@@ -35,11 +27,8 @@ export const createOrder = asyncHandler(async (req, res) => {
 			orderItems: newOrderItems,
 			user: req.user?._id,
 			shippingAddress,
-			paymentMethod: { id: paymentMethod },
-			itemsPrice,
-			taxPrice,
-			shippingPrice,
-			totalPrice,
+			payment,
+			price,
 		})
 
 		const createdOrder = await order.save()

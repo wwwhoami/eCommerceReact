@@ -36,6 +36,7 @@ const UserControls = (props: Props) => {
 				as={IconButton}
 				aria-label="User controls"
 				isRound
+				colorScheme="pink"
 				variant="solid"
 				icon={<FontAwesomeIcon width={3} height={3} icon={faUser} />}
 			/>

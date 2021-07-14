@@ -2,6 +2,7 @@ import { UserStatus } from './../types'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { AccessToken, RootState, User, UserState } from '../types'
+import { setAccessTokenHeader } from '../api'
 
 // const userInfoFromStorage = localStorage.getItem('userInfo')
 
@@ -78,6 +79,7 @@ const userReducer = createSlice({
 	initialState,
 	reducers: {
 		setAccessToken: (state, action: PayloadAction<AccessToken>) => {
+			setAccessTokenHeader(action.payload.accessToken)
 			state.userData = { ...state.userData, ...action.payload }
 		},
 		setStatus: (state, action: PayloadAction<UserStatus>) => {

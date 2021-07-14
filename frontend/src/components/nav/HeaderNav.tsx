@@ -9,12 +9,12 @@ import {
 	Tooltip,
 	useBreakpointValue,
 	useColorModeValue,
-	useDisclosure
+	useDisclosure,
 } from '@chakra-ui/react'
 import {
 	faBars,
 	faShoppingBasket,
-	faTimes
+	faTimes,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
@@ -107,6 +107,7 @@ const Header = () => {
 							size="md"
 							aria-label="To Shopping Cart"
 							variant="solid"
+							colorScheme="pink"
 							icon={
 								<>
 									<FontAwesomeIcon icon={faShoppingBasket} />

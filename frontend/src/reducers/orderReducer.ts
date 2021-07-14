@@ -13,11 +13,13 @@ const initialState: OrderState = {}
 type OrderRequestBody = {
 	orderItems: CartItem[]
 	shippingAddress: ShippingAddress
-	paymentMethod: string
-	itemsPrice: number
-	taxPrice: number
-	shippingPrice: number
-	totalPrice: number
+	payment: { method: string }
+	price: {
+		itemsPrice: number
+		taxPrice: number
+		shippingPrice: number
+		totalPrice: number
+	}
 }
 
 export const createOrder = createAsyncThunk<
@@ -29,21 +31,23 @@ export const createOrder = createAsyncThunk<
 	if (res.status === 201 && res.data) return res.data
 })
 
-export const fetchOrderById = createAsyncThunk(
-	'order/fetchOrderById',
-	async (id: string) => {
-		const res = await axios.get(`/api/order/${id}`)
-		if (res.status === 200) return res.data
-	}
-)
+export const fetchOrderById = createAsyncThunk<
+	Order | undefined,
+	string,
+	{ state: RootState }
+>('order/fetchOrderById', async (id: string) => {
+	const res = await axios.get(`/api/order/${id}`)
+	if (res.status === 200) return res.data
+})
 
-export const fetchUserOrders = createAsyncThunk(
-	'order/fetchUserOrders',
-	async () => {
-		const res = await axios.get(`/api/order`)
-		if (res.status === 200) return res.data
-	}
-)
+export const fetchUserOrders = createAsyncThunk<
+	Order[],
+	void,
+	{ state: RootState }
+>('order/fetchUserOrders', async () => {
+	const res = await axios.get(`/api/order`)
+	if (res.status === 200) return res.data
+})
 
 const orderReducer = createSlice({
 	name: 'order',
@@ -121,6 +125,7 @@ export const getOrderById = createSelector(
 
 export const getCreatedOrderId = (state: RootState) =>
 	state.order.orders?.find((order) => order._id === state.order.lastOrderId)
+		?._id
 
 export const { saveShippingAddress, savePaymentMethod } = orderReducer.actions
 

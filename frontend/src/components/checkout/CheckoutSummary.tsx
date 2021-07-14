@@ -24,7 +24,7 @@ import {
 	getOrderStatus,
 	getCreatedOrderId,
 } from '../../reducers/orderReducer'
-import OrderItemsList from './OrderItemsList'
+import CheckoutItemsList from './CheckoutItemsList'
 
 interface Props {}
 
@@ -62,11 +62,13 @@ const CheckoutSummary = (props: Props) => {
 				createOrder({
 					orderItems,
 					shippingAddress,
-					paymentMethod,
-					itemsPrice,
-					taxPrice,
-					shippingPrice,
-					totalPrice,
+					payment: { method: paymentMethod },
+					price: {
+						itemsPrice,
+						taxPrice,
+						shippingPrice,
+						totalPrice,
+					},
 				})
 			)
 		}
@@ -88,7 +90,14 @@ const CheckoutSummary = (props: Props) => {
 
 	return (
 		<>
-			<Box px={{ base: 4, sm: 6 }} py={3} position="sticky" top="60px">
+			<Box
+				px={{ base: 4, sm: 6 }}
+				py={3}
+				position="sticky"
+				top="56px"
+				bgColor="gray.50"
+				zIndex="1"
+			>
 				<Button type="submit" colorScheme="pink" w="20%" onClick={onSubmit}>
 					Order
 				</Button>
@@ -161,8 +170,8 @@ const CheckoutSummary = (props: Props) => {
 						<chakra.span fontWeight="semibold">TOTAL: </chakra.span>$
 						{totalPrice.toFixed(2)}
 					</Text>
-					<OrderItemsList />
 				</Box>
+				<CheckoutItemsList />
 			</Stack>
 		</>
 	)

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { setAccessToken } from './reducers/userReducer'
+import { fetchUserData, setAccessToken } from './reducers/userReducer'
 import store from './store'
 
 export const getCsrfToken = async () => {
@@ -35,8 +35,6 @@ export const createAxiosResponseInterceptor = () => {
 				if (res.status === 200) {
 					store.dispatch(setAccessToken(res.data))
 
-					setAccessTokenHeader(res.data.accessToken)
-
 					return axios(originalRequest)
 				}
 			}
@@ -44,6 +42,16 @@ export const createAxiosResponseInterceptor = () => {
 			return createAxiosResponseInterceptor
 		}
 	)
+}
+
+export const initialLogin = async () => {
+	const res = await axios.get(`/api/refresh-token`)
+	if (res.status === 200) {
+		store.dispatch(setAccessToken(res.data))
+		setAccessTokenHeader(res.data.accessToken).then(() =>
+			store.dispatch(fetchUserData())
+		)
+	}
 }
 
 export const setAccessTokenHeader = async (accessToken: string) => {

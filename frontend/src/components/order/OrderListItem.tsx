@@ -19,13 +19,13 @@ interface Props {
 const OrderListItem = ({ order }: Props) => {
 	const id = order._id
 	const orderDate = new Date(order.createdAt).toLocaleString().split(',')[0]
-	const cost = order.totalPrice
+	const cost = order.price.totalPrice
 	const quantity = order.orderItems
 		.map((item) => item.quantity)
 		.reduce((qty, itemQty) => qty + itemQty)
 	const items = order.orderItems
 		.slice(0, 4)
-		.map((item) => ({ image: item.image, id: item._id }))
+		.map((item) => ({ image: item.image, product: item.product }))
 
 	return (
 		<Box
@@ -49,8 +49,12 @@ const OrderListItem = ({ order }: Props) => {
 				spacing={4}
 			>
 				<HStack spacing={4}>
-					{items.map(({ image, id }) => (
-						<LinkBox as={ReactRouterLink} to={`/product/${id}`}>
+					{items.map(({ image, product }, index) => (
+						<LinkBox
+							key={index}
+							as={ReactRouterLink}
+							to={`/product/${product}`}
+						>
 							<Image h={20} w={20} fit="cover" src={image} />
 						</LinkBox>
 					))}

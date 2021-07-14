@@ -76,18 +76,39 @@ export type CartState = StateTemplate & {
 export type Order = {
 	_id: string
 	user: string
-	totalPrice: number
 	createdAt: string
 	shippingAddress: ShippingAddress
-	orderItems: Omit<
-		CartItem,
-		| 'description'
-		| 'brand'
-		| 'category'
-		| 'countInStock'
-		| 'rating'
-		| 'numReviews'
-	>[]
+	payment: {
+		method: string
+		isPaid: boolean
+		paidAt?: Date
+		status?: string
+		updateTime?: string
+		emailAddress?: string
+	}
+	delivery: {
+		isDelivered: boolean
+		deliveredAt?: Date
+	}
+	price: {
+		itemsPrice: number
+		taxPrice: number
+		shippingPrice: number
+		totalPrice: number
+	}
+	orderItems: OrderItem[]
+}
+
+export type OrderItem = Omit<
+	CartItem,
+	| 'description'
+	| 'brand'
+	| 'category'
+	| 'countInStock'
+	| 'rating'
+	| 'numReviews'
+> & {
+	product: string
 }
 
 export type OrderState = StateTemplate & {

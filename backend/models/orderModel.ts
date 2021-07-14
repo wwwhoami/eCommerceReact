@@ -17,23 +17,27 @@ export type OrderDocument = mongoose.Document & {
 		city: string
 		postalCode: string
 	}
-	paymentMethod: {
-		id: string
-
+	payment: {
+		method: string
+		isPaid: boolean
+		paidAt?: Date
 		status?: string
 		updateTime?: string
 		emailAddress?: string
 	}
-	taxPrice: number
-	shippingPrice: number
-	totalPrice: number
-	isPaid: boolean
-	paidAt?: Date
-	isDelivered: boolean
-	deliveredAt?: Date
+	delivery: {
+		isDelivered: boolean
+		deliveredAt?: Date
+	}
+	price: {
+		itemsPrice: number
+		taxPrice: number
+		shippingPrice: number
+		totalPrice: number
+	}
 }
 
-const orderSchema = new mongoose.Schema(
+const orderSchema = new mongoose.Schema<OrderDocument>(
 	{
 		user: {
 			type: mongoose.Schema.Types.ObjectId,
@@ -57,43 +61,52 @@ const orderSchema = new mongoose.Schema(
 			postalCode: { type: String, required: true },
 			country: { type: String, required: true },
 		},
-		paymentMethod: {
-			id: { type: String, required: true },
+		payment: {
+			method: { type: String, required: true },
+			isPaid: {
+				type: Boolean,
+				required: true,
+				default: false,
+			},
+			paidAt: {
+				type: Date,
+			},
 
 			status: { type: String },
 			updateTime: { type: String },
 			emailAddress: { type: String },
 		},
-		taxPrice: {
-			type: Number,
-			required: true,
-			default: 0,
+		delivery: {
+			isDelivered: {
+				type: Boolean,
+				required: true,
+				default: false,
+			},
+			deliveredAt: {
+				type: Date,
+			},
 		},
-		shippingPrice: {
-			type: Number,
-			required: true,
-			default: 0,
-		},
-		totalPrice: {
-			type: Number,
-			required: true,
-			default: 0,
-		},
-		isPaid: {
-			type: Boolean,
-			required: true,
-			default: false,
-		},
-		paidAt: {
-			type: Date,
-		},
-		isDelivered: {
-			type: Boolean,
-			required: true,
-			default: false,
-		},
-		deliveredAt: {
-			type: Date,
+		price: {
+			itemsPrice: {
+				type: Number,
+				required: true,
+				default: 0,
+			},
+			taxPrice: {
+				type: Number,
+				required: true,
+				default: 0,
+			},
+			shippingPrice: {
+				type: Number,
+				required: true,
+				default: 0,
+			},
+			totalPrice: {
+				type: Number,
+				required: true,
+				default: 0,
+			},
 		},
 	},
 	{
